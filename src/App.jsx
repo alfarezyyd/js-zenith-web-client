@@ -1,13 +1,13 @@
 import './App.css'
 import MainNavbar from "./components/MainNavbar.jsx";
-import ProductDetail from "./pages/ProductDetail.jsx";
+import ProductCart from "./pages/ProductCart.jsx";
 
 function App() {
 
   return (
     <>
       <MainNavbar/>
-      <ProductDetail/>
+      <ProductCart/>
     </>
   )
 }
