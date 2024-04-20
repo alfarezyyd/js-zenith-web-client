@@ -8,7 +8,6 @@ export default function MainNavbar() {
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <ZenithLogo />
-          <p className="hidden sm:block font-bold text-inherit">ACME</p>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-3">
           <NavbarItem>
