@@ -1,13 +1,13 @@
 import './App.css'
 import MainNavbar from "./components/MainNavbar.jsx";
-import ProductCart from "./pages/ProductCart.jsx";
+import Login from "./pages/Login.jsx";
 
 function App() {
 
   return (
     <>
       <MainNavbar/>
-      <ProductCart/>
+      <Login/>
     </>
   )
 }
