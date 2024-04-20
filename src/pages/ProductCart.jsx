@@ -10,6 +10,8 @@ import {
   ButtonGroup, Button,
 } from "@nextui-org/react";
 import {DeleteIcon} from "../assets/DeleteIcon.jsx";
+import ProductSummary from "./ProductSummary.jsx";
+import {UserIcon} from "../assets/UserIcon.jsx";
 
 const columns = [
   {name: "IMAGE", uid: "image"},
@@ -154,7 +156,16 @@ export default function ProductCart() {
           )}
         </TableBody>
       </Table>
-
+      <div className="flex mt-8 flex-row-reverse">
+        <div className="w-1/3">
+          <ProductSummary/>
+        </div>
+      </div>
+      <div className="flex flex-row-reverse mt-5 mb-5">
+        <Button color="success" startContent={<UserIcon/>}>
+          Checkout
+        </Button>
+      </div>
     </div>
   );
 }
