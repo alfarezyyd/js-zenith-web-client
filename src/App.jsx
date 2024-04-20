@@ -1,7 +1,7 @@
 import './App.css'
 import MainNavbar from "./components/MainNavbar.jsx";
-import {Carousel} from "flowbite-react";
-import LinkList from "./components/LinkList.jsx";
+import ProductCard from "./components/ProductCard.jsx";
+import ListboxLink from "./components/ListboxLink.jsx";
 
 function App() {
 
@@ -9,17 +9,21 @@ function App() {
     <>
       <MainNavbar/>
       <div className="flex mt-4">
-        <div className="w-1/3">
-          <LinkList/>
+        <div className="w-1/3 text-left">
+          <ListboxLink/>
         </div>
         <div className="h-56 sm:h-64 xl:h-80 w-2/3 2xl:h-96">
-          <Carousel>
-            <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="..."/>
-            <img src="https://flowbite.com/docs/images/carousel/carousel-2.svg" alt="..."/>
-            <img src="https://flowbite.com/docs/images/carousel/carousel-3.svg" alt="..."/>
-            <img src="https://flowbite.com/docs/images/carousel/carousel-4.svg" alt="..."/>
-            <img src="https://flowbite.com/docs/images/carousel/carousel-5.svg" alt="..."/>
-          </Carousel>
+
+        </div>
+      </div>
+      <div className="xl:mt-14">
+        <h1 className="text-left text-2xl font-semibold subpixel-antialiased">Explore Our Products</h1>
+        <div className="grid xl:grid-cols-4 gap-3.5 mt-5">
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
         </div>
       </div>
     </>
