@@ -3,8 +3,9 @@
 import ListboxLink from "@/components/ListboxLink";
 import {Carousel} from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import {Image} from "@nextui-org/react";
+import {Divider, Image} from "@nextui-org/react";
 import ProductCard from "@/components/ProductCard";
+import CategoryCard from "@/components/CategoryCard";
 
 export default function Home() {
   return (
@@ -28,6 +29,17 @@ export default function Home() {
           </Carousel>
         </div>
       </div>
+      <div className="xl:mt-14">
+        <h1 className="text-left text-2xl font-semibold subpixel-antialiased">Browse By Category</h1>
+        <div className="flex flex-row gap-x-8 mt-5">
+          <CategoryCard/>
+          <CategoryCard/>
+          <CategoryCard/>
+          <CategoryCard/>
+          <CategoryCard/>
+        </div>
+      </div>
+      <Divider className="my-8"/>
       <div className="xl:mt-14">
         <h1 className="text-left text-2xl font-semibold subpixel-antialiased">Explore Our Products</h1>
         <div className="grid xl:grid-cols-4 gap-3.5 mt-5">
