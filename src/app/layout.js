@@ -3,6 +3,7 @@ import "./globals.css";
 import {NextUIProvider} from "@nextui-org/react";
 import MainNavbar from "@/components/MainNavbar";
 import React from "react";
+import Footer from "@/components/Footer";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -22,9 +23,10 @@ export default function RootLayout({children}) {
         <div className="sticky top-0 w-full z-50">
           <MainNavbar/>
         </div>
-        <div className="container py-5 mx-auto">
+        <div className="container mt-8 mb-24 mx-auto">
           {children}
         </div>
+        <Footer/>
       </main>
     </NextUIProvider>
     </body>
