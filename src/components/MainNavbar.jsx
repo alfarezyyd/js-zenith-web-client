@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, {useEffect, useState} from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -14,10 +16,35 @@ import {
 } from "@nextui-org/react";
 import {ZenithLogo} from "@/assets/ZenithLogo";
 import {SearchIcon} from "@/assets/SearchIcon";
+import {usePathname} from "next/navigation";
 
 export default function App() {
+  const [isBlurred, setIsBlurred] = useState(false);
+  const pathName = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsBlurred(true);
+      } else {
+        setIsBlurred(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <Navbar isBordered>
+    <Navbar isBordered isBlurred={false}
+            className={
+                `bg-opacity-0 transition-all duration-500 ${
+                  isBlurred ? "backdrop-blur-md bg-opacity-50 bg-blue-950/30" : ""
+                }`
+            }
+    >
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <ZenithLogo/>
@@ -44,7 +71,7 @@ export default function App() {
       <NavbarContent as="div" className="items-center" justify="end">
         <Input
           classNames={{
-            base: "max-w-full sm:max-w-[10rem] h-10",
+            base: "max-w-full sm:max-w-[25rem] h-10",
             mainWrapper: "h-full",
             input: "text-small",
             inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
