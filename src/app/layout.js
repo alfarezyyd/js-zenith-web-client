@@ -26,6 +26,8 @@ export default function RootLayout({children}) {
         <div className="container mt-8 mb-24 mx-auto">
           {children}
         </div>
+        <div className="bg-gradient-radial"></div>
+        <div className="h-48 bg-gradient-to-t from-gray-900 to-black"></div>
         <Footer/>
       </main>
     </NextUIProvider>
