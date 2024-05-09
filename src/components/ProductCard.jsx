@@ -1,9 +1,11 @@
 import {Card, CardHeader, CardBody, Image, CardFooter, Button} from "@nextui-org/react";
+import Link from 'next/link'
+
 import RatingStar from "./RatingStar.jsx";
 
-export default function ProductCard() {
+export default function ProductCard({name, price, slug, imagePath}) {
   return (
-    <Card className="py-4 border-none">
+    <Card className="py-4 border-none" as={Link} href={`/product/${slug}`}>
       <CardHeader className="overflow-visible py-1">
         <Card
           isFooterBlurred
@@ -13,7 +15,7 @@ export default function ProductCard() {
           <Image
             alt="Woman listing to music"
             className="object-cover"
-            src="/images/hero-card-complete.jpeg"
+            src={imagePath}
             width={300}
           />
           <CardFooter
@@ -26,10 +28,10 @@ export default function ProductCard() {
         </Card>
       </CardHeader>
       <CardBody className="pb-0 pt-2 px-4 flex-col items-start">
-        <p className="text-tiny uppercase font-bold">Product Name</p>
-        <p className="text-sm text-red-500 mb-2 mt-2">Product Name</p>
+        <p className="text-tiny uppercase font-bold">{name}</p>
+        <p className="text-sm text-red-500 mb-2 mt-2">{price}</p>
         <RatingStar/>
       </CardBody>
     </Card>
-);
+  );
 }
