@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import {
-  Card, CardHeader, Divider, CardBody, CardFooter, Link, Image
+  Card, CardHeader, Divider, CardBody, CardFooter, Link
 } from "@nextui-org/react";
 
 export default function Page() {
