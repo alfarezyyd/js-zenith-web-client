@@ -20,7 +20,8 @@
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
-    "react-responsive-carousel": "^3.2.23"
+    "react-responsive-carousel": "^3.2.23",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "eslint": "^8",
