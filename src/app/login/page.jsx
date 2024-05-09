@@ -1,21 +1,18 @@
 "use client"
 import {Button, Image} from "@nextui-org/react";
-import {UserIcon} from "@/assets/UserIcon.jsx";
 import {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGoogle} from "@fortawesome/free-brands-svg-icons";
+import Link from "next/link";
 
 export default function Page() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Siapkan data untuk dikirim ke API
-    const formData = {
-      email: email,
-      password: password
-    };
     try {
       const response = await fetch('http://127.0.0.1:8000/login', {
         method: 'POST',
@@ -69,7 +66,9 @@ export default function Page() {
             <Button color="primary" type="submit" className="w-full p-5 text-md" radius="sm">
               Submit
             </Button>
-            <Button startContent={<FontAwesomeIcon icon={faGoogle}/>} color="" variant="flat" type="submit" className="w-full mt-5 border-2 p-5 text-md"
+            <Button startContent={<FontAwesomeIcon icon={faGoogle}/>} color="" variant="flat" type="submit"
+                    className="w-full mt-5 border-2 p-5 text-md" as={Link}
+                    href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`}
                     radius="sm">
               Login with Google
             </Button>
