@@ -29,6 +29,8 @@ export default function Home() {
     } catch (err) {
       console.log(err);
     }
+
+
   }
   const accessToken = useAuthStore((state) => state.accessToken);
   useEffect(() => {

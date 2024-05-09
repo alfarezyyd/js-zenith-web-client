@@ -7,12 +7,11 @@ export default function Page() {
 
   const homeParams = useSearchParams();
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
-
   useEffect(() => {
     const token = homeParams.get('token');
 
     if (token) {
-      setAccessToken(token); // Simpan token ke store menggunakan zustand
+      setAccessToken(token)
       redirect('http://localhost:3000')
     }
 
