@@ -7,27 +7,30 @@ import {Divider, Image} from "@nextui-org/react";
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import {useEffect, useState} from "react";
+import {redirect, useSearchParams} from "next/navigation";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
+import useAuthStore from "@/lib/authStore";
 
 export default function Home() {
   const [product, setProduct] = useState([])
   const fetchData = async () => {
     try {
-      const token = "eyJpdiI6ImdYNzV6REYyVVVaNktQMmpETEtyZmc9PSIsInZhbHVlIjoiVzFlbkk0M2VKUUxvN2RFTURvc0prbnE2L2Z4KzZ3NFllZ2dyd0RXcm9HQU1qU2NZNWpncWV6RjZjVnRUc2lnNTRPalh0N1hJVDkwS2VySEFGdGkrMHdoeWJHZmt4V09XVm0xZXd4L1Z0RnhVSnJjckRzV3UwdGFZRWFieFRtdWMiLCJtYWMiOiI4YTAwZTc3ZDZlMjM0ZTMyM2YzMzQxZmU3MmM4ZTg1N2UzYzg4OTViYmZjNGE1MWFhOGJhNGEwZWI1MGZjYWY3IiwidGFnIjoiIn0%3D"
-      const response = await fetch("http://127.0.0.1:8000/api/products/category-parentadwa", {
+      const response = await fetch("http://127.0.0.1:8000/api/products", {
         method: "GET",
         cache: "no-store",
         headers: {
           Referer: '127.0.0.1:8000',
           Accept: 'application/json',
-
+          Authorization: `Bearer ${accessToken}`
         },
       });
       const data = await response.json();
-      setProduct(data.data.value);
+      setProduct(data.data);
     } catch (err) {
-      console.log('uuu', err);
+      console.log(err);
     }
   }
+  const accessToken = useAuthStore((state) => state.accessToken);
   useEffect(() => {
     fetchData()
   }, [])
@@ -69,7 +72,8 @@ export default function Home() {
           {
             product.map((item, index) => {
               return (
-                <ProductCard key={index} name={item.name} price={item.price} slug={item.slug} imagePath={"/products/hero.jpeg"} />
+                <ProductCard key={index} name={item.name} price={item.price} slug={item.slug}
+                             imagePath={"/products/hero.jpeg"}/>
               )
             })
           }
