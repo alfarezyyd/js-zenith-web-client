@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMobileScreen} from "@fortawesome/free-solid-svg-icons";
 
 
-export default function CategoryCard() {
+export default function CategoryCard({categoryName, categorySlug}) {
   return (
     <Card className="py-4">
       <CardHeader className="overflow-visible py-2">
@@ -11,7 +11,7 @@ export default function CategoryCard() {
       </CardHeader>
       <CardBody className="pb-0 pt-2 px-4 flex-col items-start">
         <Divider/>
-        <p className="text-tiny uppercase font-bold mt-2">Telepon Genggam</p>
+        <p className="text-tiny uppercase font-bold mt-2">{categoryName}</p>
       </CardBody>
     </Card>
   )

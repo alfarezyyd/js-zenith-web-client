@@ -13,9 +13,10 @@ import useAuthStore from "@/lib/authStore";
 
 export default function Home() {
   const [product, setProduct] = useState([])
+  const [category, setCategory] = useState([])
   const fetchData = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/products", {
+      const responseProduct = await fetch("http://127.0.0.1:8000/api/products", {
         method: "GET",
         cache: "no-store",
         headers: {
@@ -24,8 +25,20 @@ export default function Home() {
           Authorization: `Bearer ${accessToken}`
         },
       });
-      const data = await response.json();
-      setProduct(data.data);
+
+      const responseCategory = await fetch("http://127.0.0.1:8000/api/categories", {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          Referer: '127.0.0.1:8000',
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+      });
+      const dataProduct = await responseProduct.json();
+      setProduct(dataProduct.data);
+      const dataCategory = await responseCategory.json();
+      setCategory(dataCategory.data);
     } catch (err) {
       console.log(err);
     }
@@ -35,6 +48,7 @@ export default function Home() {
   const accessToken = useAuthStore((state) => state.accessToken);
   useEffect(() => {
     fetchData()
+    console.log(accessToken)
   }, [])
   return (
     <>
@@ -60,11 +74,13 @@ export default function Home() {
       <div className="xl:mt-14">
         <h1 className="text-left text-2xl font-semibold subpixel-antialiased">Browse By Category</h1>
         <div className="flex flex-row gap-x-8 mt-5">
-          <CategoryCard/>
-          <CategoryCard/>
-          <CategoryCard/>
-          <CategoryCard/>
-          <CategoryCard/>
+          {
+            category.map((item, index) => {
+              return (
+                <CategoryCard categoryName={item.name} key={index} categorySlug={item.slug} />
+              )
+            })
+          }
         </div>
       </div>
       <Divider className="my-8"/>
