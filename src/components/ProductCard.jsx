@@ -15,7 +15,7 @@ export default function ProductCard({name, price, slug, imagePath}) {
           <Image
             alt="Woman listing to music"
             className="object-cover"
-            src={imagePath}
+            src={`http://127.0.0.1/storage/${imagePath}`}
             width={300}
           />
           <CardFooter
