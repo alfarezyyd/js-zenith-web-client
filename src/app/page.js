@@ -48,7 +48,9 @@ export default function Home() {
   const accessToken = useAuthStore((state) => state.accessToken);
   useEffect(() => {
     fetchData()
-    console.log(accessToken)
+    if (accessToken === undefined){
+      redirect("http://localhost:3000/auth/google")
+    }
   }, [])
   return (
     <>
@@ -91,7 +93,7 @@ export default function Home() {
             product.map((item, index) => {
               return (
                 <ProductCard key={index} name={item.name} price={item.price} slug={item.slug}
-                             imagePath={"/products/hero.jpeg"}/>
+                             imagePath={`storage/${item.image_path}`}/>
               )
             })
           }
