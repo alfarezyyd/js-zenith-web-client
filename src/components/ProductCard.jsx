@@ -4,6 +4,7 @@ import Link from 'next/link'
 import RatingStar from "./RatingStar.jsx";
 
 export default function ProductCard({name, price, slug, imagePath}) {
+console.log(imagePath)
   return (
     <Card className="py-4 border-none" as={Link} href={`/product/${slug}`}>
       <CardHeader className="overflow-visible py-1">
@@ -15,7 +16,7 @@ export default function ProductCard({name, price, slug, imagePath}) {
           <Image
             alt="Woman listing to music"
             className="object-cover"
-            src={`http://127.0.0.1/storage/${imagePath}`}
+            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${imagePath}`}
             width={300}
           />
           <CardFooter

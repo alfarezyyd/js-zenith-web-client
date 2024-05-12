@@ -10,6 +10,7 @@ import {useEffect, useState} from "react";
 import {redirect, useSearchParams} from "next/navigation";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import useAuthStore from "@/lib/authStore";
+import Link from "next/link";
 
 export default function Home() {
   const [product, setProduct] = useState([])
@@ -35,8 +36,12 @@ export default function Home() {
           Authorization: `Bearer ${accessToken}`
         },
       });
+      if (responseProduct.status === 401) {
+        redirect(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`);
+      }
       const dataProduct = await responseProduct.json();
       setProduct(dataProduct.data);
+      console.log(dataProduct)
       const dataCategory = await responseCategory.json();
       setCategory(dataCategory.data);
     } catch (err) {
@@ -48,9 +53,10 @@ export default function Home() {
   const accessToken = useAuthStore((state) => state.accessToken);
   useEffect(() => {
     fetchData()
-    if (accessToken === undefined){
-      redirect("http://localhost:3000/auth/google")
+    if (accessToken === undefined) {
+      redirect(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`);
     }
+    console.log(accessToken)
   }, [])
   return (
     <>
@@ -79,7 +85,7 @@ export default function Home() {
           {
             category.map((item, index) => {
               return (
-                <CategoryCard categoryName={item.name} key={index} categorySlug={item.slug} />
+                <CategoryCard categoryName={item.name} key={index} categorySlug={item.slug}/>
               )
             })
           }
@@ -92,8 +98,10 @@ export default function Home() {
           {
             product.map((item, index) => {
               return (
-                <ProductCard key={index} name={item.name} price={item.price} slug={item.slug}
-                             imagePath={`storage/${item.image_path}`}/>
+                <Link key={index} href={`/products/${item.slug}`}>
+                  <ProductCard as key={index} name={item.name} price={item.price} slug={item.slug}
+                               imagePath={`storage/stores/${item.resources[0].image_path}`}/>
+                </Link>
               )
             })
           }
