@@ -98,10 +98,8 @@ export default function Home() {
           {
             product.map((item, index) => {
               return (
-                <Link key={index} href={`/products/${item.slug}`}>
                   <ProductCard as key={index} name={item.name} price={item.price} slug={item.slug}
                                imagePath={`storage/stores/${item.resources[0].image_path}`}/>
-                </Link>
               )
             })
           }

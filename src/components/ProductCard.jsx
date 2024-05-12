@@ -6,7 +6,10 @@ import RatingStar from "./RatingStar.jsx";
 export default function ProductCard({name, price, slug, imagePath}) {
 console.log(imagePath)
   return (
-    <Card className="py-4 border-none" as={Link} href={`/product/${slug}`}>
+    <Card className="py-4 border-none" as={Link} href={{
+      pathname: `products/${slug}`,
+      query: slug,
+    }}>
       <CardHeader className="overflow-visible py-1">
         <Card
           isFooterBlurred
