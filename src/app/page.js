@@ -7,7 +7,7 @@ import {Divider, Image} from "@nextui-org/react";
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import {useEffect, useState} from "react";
-import {redirect, useSearchParams} from "next/navigation";
+import {redirect} from "next/navigation";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import useAuthStore from "@/lib/authStore";
 import Link from "next/link";
@@ -98,8 +98,8 @@ export default function Home() {
           {
             product.map((item, index) => {
               return (
-                  <ProductCard as key={index} name={item.name} price={item.price} slug={item.slug}
-                               imagePath={`storage/stores/${item.resources[0].image_path}`}/>
+                <ProductCard as key={index} name={item.name} price={item.price} slug={item.slug}
+                             imagePath={`storage/stores/${item.resources[0].image_path}`}/>
               )
             })
           }
