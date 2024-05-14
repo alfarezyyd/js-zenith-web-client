@@ -1,12 +1,50 @@
 'use client'
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import ProductReview from "@/components/ProductReview";
+import useAuthStore from "@/lib/authStore";
+import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure} from "@nextui-org/react";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
+
 const ProductPage = ({params}) => {
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const [product, setProduct] = useState([]);
+  const {isOpen, onOpen, onClose} = useDisclosure();
+
+  const handleOpen = () => {
+    onOpen();
+  }
   const fetchData = async () => {
     try {
-      const responseProduct = await fetch(`http://127.0.0.1:8000/api/products/${params.slug[0]}/${params.slug[1]}`)
-      console.log(responseProduct)
+      const responseProduct = await fetch(`http://127.0.0.1:8000/api/products/${params.slug[0]}/${params.slug[1]}`, {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          Referer: '127.0.0.1:8000',
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+      })
+      const dataProduct = await responseProduct.json()
+      setProduct(dataProduct.data)
     } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async function addIntoCart() {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts/${product.id}`, {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          Referer: '127.0.0.1:8000',
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+      });
+      handleOpen()
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -31,14 +69,13 @@ const ProductPage = ({params}) => {
               <h1
                 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"
               >
-                Apple iMac 24" All-In-One Computer, Apple M1, 8GB RAM, 256GB SSD,
-                Mac OS, Pink
+                {product.name}
               </h1>
-              <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
+              <div className="mt-4 sm:items-center sm:gap-4 sm:flex lg:flex-col lg:items-start">
                 <p
                   className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white"
                 >
-                  $1,249.99
+                  Rp. {product.price}
                 </p>
 
                 <div className="flex items-center gap-2 mt-2 sm:mt-0">
@@ -150,11 +187,10 @@ const ProductPage = ({params}) => {
                   Add to favorites
                 </a>
 
-                <a
-                  href="#"
+                <button
+                  onClick={addIntoCart}
                   title=""
                   className="text-white mt-4 sm:mt-0 bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 flex items-center justify-center"
-                  role="button"
                 >
                   <svg
                     className="w-5 h-5 -ms-2 me-2"
@@ -175,7 +211,7 @@ const ProductPage = ({params}) => {
                   </svg>
 
                   Add to cart
-                </a>
+                </button>
               </div>
 
               <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800"/>
@@ -225,7 +261,7 @@ const ProductPage = ({params}) => {
                         className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
                   <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                        viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                           d="M12 6C6.5 1 1 8 5.8 13l6.2 7 6.2-7C23 8 17.5 1 12 6Z"></path>
                   </svg>
                 </button>
@@ -234,11 +270,11 @@ const ProductPage = ({params}) => {
                   Add to favourites
                   <div className="tooltip-arrow" data-popper-arrow></div>
                 </div>
-                <button type="button"
+                <button type="submit" onClick={addIntoCart}
                         className="inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                   <svg className="-ms-2 me-2 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                        height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                           d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4"/>
                   </svg>
                   Add to cart
@@ -271,7 +307,7 @@ const ProductPage = ({params}) => {
                         className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
                   <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                        viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                           d="M12 6C6.5 1 1 8 5.8 13l6.2 7 6.2-7C23 8 17.5 1 12 6Z"></path>
                   </svg>
                 </button>
@@ -284,7 +320,7 @@ const ProductPage = ({params}) => {
                         className="inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                   <svg className="-ms-2 me-2 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                        height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                           d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4"/>
                   </svg>
                   Add to cart
@@ -317,7 +353,7 @@ const ProductPage = ({params}) => {
                         className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
                   <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                        viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                           d="M12 6C6.5 1 1 8 5.8 13l6.2 7 6.2-7C23 8 17.5 1 12 6Z"></path>
                   </svg>
                 </button>
@@ -331,7 +367,7 @@ const ProductPage = ({params}) => {
                         className="inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                   <svg className="-ms-2 me-2 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                        height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                           d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4"/>
                   </svg>
                   Add to cart
@@ -342,6 +378,39 @@ const ProductPage = ({params}) => {
         </div>
       </section>
       <ProductReview/>
+      <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+              <ModalBody>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Nullam pulvinar risus non risus hendrerit venenatis.
+                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
+                </p>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Nullam pulvinar risus non risus hendrerit venenatis.
+                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
+                </p>
+                <p>
+                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit
+                  dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis.
+                  Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor eiusmod.
+                  Et mollit incididunt nisi consectetur esse laborum eiusmod pariatur
+                  proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="success" onPress={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };
