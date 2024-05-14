@@ -41,7 +41,6 @@ export default function Home() {
       }
       const dataProduct = await responseProduct.json();
       setProduct(dataProduct.data);
-      console.log(dataProduct)
       const dataCategory = await responseCategory.json();
       setCategory(dataCategory.data);
     } catch (err) {
@@ -56,7 +55,6 @@ export default function Home() {
     if (accessToken === undefined) {
       redirect(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`);
     }
-    console.log(accessToken)
   }, [])
   return (
     <>
@@ -97,9 +95,11 @@ export default function Home() {
         <div className="grid xl:grid-cols-4 gap-3.5 mt-5 gap-y-8">
           {
             product.map((item, index) => {
+              console.log(item)
               return (
-                <ProductCard as key={index} name={item.name} price={item.price} slug={item.slug}
-                             imagePath={`storage/stores/${item.resources[0].image_path}`}/>
+                <ProductCard as
+                             key={index} name={item.name} price={item.price} slug={item.slug}
+                             imagePath={`storage/stores/${item.resources[0].image_path}`} storeSlug={item.store.slug}/>
               )
             })
           }

@@ -3,12 +3,10 @@ import Link from 'next/link'
 
 import RatingStar from "./RatingStar.jsx";
 
-export default function ProductCard({name, price, slug, imagePath}) {
-console.log(imagePath)
+export default function ProductCard({name, price, slug, imagePath, storeSlug}) {
   return (
     <Card className="py-4 border-none" as={Link} href={{
-      pathname: `products/${slug}`,
-      query: slug,
+      pathname: `products/${storeSlug}/${slug}`,
     }}>
       <CardHeader className="overflow-visible py-1">
         <Card
