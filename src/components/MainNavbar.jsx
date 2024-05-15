@@ -6,8 +6,8 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
   Input,
+  Link as RouterLink,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
@@ -17,6 +17,7 @@ import {
 import {ZenithLogo} from "@/assets/ZenithLogo";
 import {SearchIcon} from "@/assets/SearchIcon";
 import {usePathname} from "next/navigation";
+import Link from "next/link" ;
 
 export default function App() {
   const [isBlurred, setIsBlurred] = useState(false);
@@ -40,9 +41,9 @@ export default function App() {
   return (
     <Navbar isBordered isBlurred={false}
             className={
-                `bg-opacity-0 transition-all duration-500 ${
-                  isBlurred ? "backdrop-blur-md bg-opacity-50 bg-blue-950/30" : ""
-                }`
+              `bg-opacity-0 transition-all duration-500 ${
+                isBlurred ? "backdrop-blur-md bg-opacity-50 bg-blue-950/30" : ""
+              }`
             }
     >
       <NavbarContent justify="start">
@@ -56,13 +57,13 @@ export default function App() {
             </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link href="#" aria-current="page" color="secondary">
+            <RouterLink href="#" aria-current="page" color="secondary">
               Contact
-            </Link>
+            </RouterLink>
           </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="#">
-              About
+            <Link href={"/cart"}>
+              Cart
             </Link>
           </NavbarItem>
         </NavbarContent>
