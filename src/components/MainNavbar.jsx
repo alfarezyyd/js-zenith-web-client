@@ -21,7 +21,6 @@ import Link from "next/link" ;
 
 export default function App() {
   const [isBlurred, setIsBlurred] = useState(false);
-  const pathName = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,7 +57,7 @@ export default function App() {
           </NavbarItem>
           <NavbarItem isActive>
             <RouterLink href="#" aria-current="page" color="secondary">
-              Contact
+              Store
             </RouterLink>
           </NavbarItem>
           <NavbarItem>
