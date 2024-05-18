@@ -10,11 +10,11 @@ import {useEffect, useState} from "react";
 import {redirect} from "next/navigation";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import useAuthStore from "@/lib/authStore";
-import Link from "next/link";
 
 export default function Home() {
   const [product, setProduct] = useState([])
   const [category, setCategory] = useState([])
+
   const fetchData = async () => {
     try {
       const responseProduct = await fetch("http://127.0.0.1:8000/api/products", {
@@ -37,7 +37,7 @@ export default function Home() {
         },
       });
       if (responseProduct.status === 401) {
-        redirect(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`);
+        return redirect(process.env.NEXT_PUBLIC_BACKEND_URL + '/auth/google');
       }
       const dataProduct = await responseProduct.json();
       setProduct(dataProduct.data);
@@ -46,14 +46,26 @@ export default function Home() {
     } catch (err) {
       console.log(err);
     }
-
-
   }
   const accessToken = useAuthStore((state) => state.accessToken);
   useEffect(() => {
     fetchData()
-    if (accessToken === undefined) {
-      redirect(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`);
+    // You can also change below url value to any script url you wish to load,
+    // for example this is snap.js for Sandbox Env (Note: remove `.sandbox` from url if you want to use production version)
+    const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
+
+    let scriptTag = document.createElement('script');
+    scriptTag.src = midtransScriptUrl;
+
+    // Optional: set script attribute, for example snap.js have data-client-key attribute
+    // (change the value according to your client-key)
+    const myMidtransClientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
+    scriptTag.setAttribute('data-client-key', myMidtransClientKey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
     }
   }, [])
   return (
