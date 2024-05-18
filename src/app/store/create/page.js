@@ -5,6 +5,7 @@ import {redirect} from "next/navigation";
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
+  const [storeSlug, setStoreSlug] = useState();
   const [formValues, setFormValues] = useState({
     name: '',
     domain: '',
@@ -16,10 +17,41 @@ export default function Page() {
     description: '',
     image: null,
   });
+  const fetchData = async () => {
+    try {
+      const responseStore = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stores/find`, {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          Referer: '127.0.0.1:8000',
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+      })
+      const dataStore = await responseStore.json()
+      return dataStore.data.slug;
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   useEffect(() => {
+    const handleFetchData = async () => {
+      const slug = await fetchData();
+      if (slug) {
+        setStoreSlug(slug);
+      }
+    };
 
+    handleFetchData();
   }, []);
+
+  useEffect(() => {
+    if (storeSlug) {
+      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/store/index/${storeSlug}`);
+    }
+  }, [storeSlug]);
+
 
   const handleInputChange = (e) => {
     const {name, value} = e.target;
@@ -54,8 +86,9 @@ export default function Page() {
       },
       body: formData,
     })
-      .then(() => {
-        return redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/stores/index`)
+      .then(async (response) => {
+        let responseCreate = await response.json();
+        return redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/stores/index/${responseCreate.data.slug}`)
       })
       .catch(error => {
         console.error('Error:', error);
