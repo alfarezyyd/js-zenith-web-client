@@ -11,6 +11,7 @@ export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
   const {cart, setCart} = useCartStore();
   let [totalPrice, setTotalPrice] = useState();
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
   async function fetchData() {
     try {
@@ -25,6 +26,7 @@ export default function Page() {
       });
       let dataCart = await responseCart.json();
       setCart(dataCart.data)
+      console.log(dataCart)
     } catch (error) {
       console.error(error)
     }
@@ -35,33 +37,72 @@ export default function Page() {
     fetchData()
   }, [])
 
-  useEffect(() => {
-    const total = cart.reduce((sum, item) => sum + item.payload.product.price, 0);
-    setTotalPrice(total);
-  }, [cart]);
+  const handleCheckboxChange = (storeId, productId, quantity) => {
+    // Memeriksa apakah store id sudah ada di array selectedProducts
+    const isStoreSelected = selectedProducts.length === 0 || selectedProducts[0].storeId === storeId;
+
+    // Memeriksa apakah produk yang dipilih memiliki ID toko yang sama dengan toko pertama yang dipilih
+    if (!isStoreSelected) {
+      alert("Anda hanya dapat memilih produk dari satu toko.");
+      return;
+    }
+
+    // Memeriksa apakah produk sudah dipilih sebelumnya
+    const isSelected = selectedProducts.find((product) => product.productId === productId);
+
+    // Jika belum dipilih, tambahkan produk ke array selectedProducts
+    if (!isSelected) {
+      setSelectedProducts([...selectedProducts, {storeId, productId, quantity}]);
+    } else {
+      // Jika sudah dipilih, hapus produk dari array selectedProducts
+      setSelectedProducts(selectedProducts.filter((product) => product.productId !== productId));
+    }
+    console.log(selectedProducts)
+  };
+
+
+  // useEffect(() => {
+  //   const total = cart.reduce((sum, item) => sum + item.payload.product.price, 0);
+  //   setTotalPrice(total);
+  // }, [cart]);
 
   return (
     <>
       <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16 rounded-3xl px-4">
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Shopping Cart</h2>
-
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
             <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
               <div className="space-y-6">
-                <div
-                  className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
-                  {
-                    cart.map((value) => {
-                      return (
-                        <>
-                          <ProductCart key={value.id} product={value.payload.product}/>
-                          <Divider className="my-4"/>
-                        </>
-                      )
-                    })
-                  }
-                </div>
+                {cart.map((value, index) => {
+                  return (
+                    <div key={index}>
+                      <div
+                        className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                        <div
+                          className="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                          <div>
+                            <h5 className="mr-3 font-semibold dark:text-white">{value.store.name}</h5>
+                            <p className="text-gray-500 dark:text-gray-400">{value.store.slogan}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6 mt-4">
+                        {value.products.map((product, index) => {
+                          return (
+                            <div className="mt-4" key={index}>
+                              <ProductCart product={product} selectedProducts={selectedProducts}
+                                           handleCheckboxChange={handleCheckboxChange} storeId={value.store.id}/>
+                              <Divider className="bg-white"/>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+
               </div>
             </div>
 
