@@ -11,7 +11,6 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-  Image
 } from "@nextui-org/react";
 
 export default function Page() {
@@ -59,22 +58,6 @@ export default function Page() {
   };
 
   const checkout = async () => {
-    const orderPayload = {
-      "address_id": selectedAddress.id,
-      "expedition_id": selectedExpedition,
-      "store_id": selectedProducts[0].store_id,
-      order_payload: [],
-    }
-
-    selectedProducts.forEach(product => {
-      order_payload.push({
-        product_id: product.id,
-        quantity: product.quantity,
-      });
-    });
-
-    console.log(orderPayload)
-    return
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/checkout`, {
       method: "POST",
       cache: "no-store",
@@ -84,17 +67,18 @@ export default function Page() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`
       },
-      body: JSON.stringify({gross_amount: totalPrice}),
+      body: JSON.stringify({gross_amount: 2000}),
     });
 
     const requestData = await response.json();
+    console.log(requestData)
     window.snap.pay(requestData.data.token, {
       onSuccess: function (result) {
         alert("payment success!");
         console.log(result);
       },
       onPending: function (result) {
-        alert("wating your payment!");
+        alert("waiting for your payment!");
         console.log(result);
       },
       onError: function (result) {
@@ -109,27 +93,30 @@ export default function Page() {
 
   useEffect(() => {
     fetchInitializeData();
-    console.log(selectedProducts)
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Tampilkan loading indicator jika data belum selesai dimuat
+    return <div>Loading...</div>; // Display loading indicator while data is being fetched
   }
-
 
   const handlePickAddress = (address) => {
     setSelectedAddress(address);
-    onClose(); // Menutup modal setelah alamat dipilih
+    onClose(); // Close the modal after an address is selected
   };
 
   const handleExpeditionChange = (event) => {
     setSelectedExpedition(event.target.value);
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission
+    checkout();
+  };
+
   return (
     <>
       <section className="bg-white p-4 antialiased dark:bg-gray-900 md:p-16">
-        <form action="#" className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <form action="#" className="mx-auto max-w-screen-xl px-4 2xl:px-0" onSubmit={handleSubmit}>
           <div className="mx-auto max-w-3xl">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Order Summary</h2>
 
@@ -138,8 +125,7 @@ export default function Page() {
               <dl>
                 {selectedAddress !== null ? (
                   <>
-                    <dt
-                      className="text-base font-medium text-gray-900 dark:text-white">
+                    <dt className="text-base font-medium text-gray-900 dark:text-white">
                       {selectedAddress[0].label}
                     </dt>
                     <dd className="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
@@ -194,7 +180,6 @@ export default function Page() {
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {
                     selectedProducts.map((value, index) => {
-                      console.log(value)
                       return (
                         <tr key={index}>
                           <td className="whitespace-nowrap py-4 md:w-[384px]">
@@ -267,7 +252,7 @@ export default function Page() {
                     to Shopping
                   </button>
 
-                  <button type="submit" onClick={checkout}
+                  <button type="submit"
                           className="mt-4 flex w-full items-center justify-center rounded-lg bg-primary-700  px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300  dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0">Send
                     the order
                   </button>
@@ -312,7 +297,7 @@ export default function Page() {
                       <div className="flex flex-col">
                         <p className="text-md text-default-300">{value.note}</p>
                         <Divider className="bg-white my-4 w-full"/>
-                        <Button color="primary" size="xl" onClick={handlePickAddress}>
+                        <Button color="primary" size="xl" onClick={() => handlePickAddress(value)}>
                           Pick
                         </Button>
                       </div>
