@@ -1,4 +1,4 @@
-export default function Page(props) {
+export default function Page() {
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
       <div className="mx-auto max-w-2xl px-4 2xl:px-0">

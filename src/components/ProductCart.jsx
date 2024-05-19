@@ -1,12 +1,11 @@
 
 export default function ProductCart({product}) {
-  console.log(product.product.resources[0].image_path)
   return (
     <>
       <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 md:mb-8 sm:mb-4">
         <a href="#" className="shrink-0 md:order-1">
           <img className="hidden h-20 w-20 dark:block"
-               src={process.env.NEXT_PUBLIC_BACKEND_URL + `/storage/stores/${product.product.resources[0].image_path}`} alt="imac image"/>
+               src={process.env.NEXT_PUBLIC_BACKEND_URL + `/storage/stores/${product.resources[0].image_path}`} alt="imac image"/>
         </a>
 
         <label htmlFor="counter-input" className="sr-only">Choose quantity:</label>
@@ -33,13 +32,13 @@ export default function ProductCart({product}) {
             </button>
           </div>
           <div className="text-end md:order-4 md:w-32">
-            <p className="text-base font-bold text-gray-900 dark:text-white">Rp. {product.product.price}</p>
+            <p className="text-base font-bold text-gray-900 dark:text-white">Rp. {product.price}</p>
           </div>
         </div>
 
         <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
           <a href="#" className="text-base font-medium text-gray-900 hover:underline dark:text-white">
-            {product.product.name}
+            {product.name}
           </a>
 
           <div className="flex items-center gap-4">

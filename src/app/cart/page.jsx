@@ -4,11 +4,13 @@ import useAuthStore from "@/lib/authStore";
 import ProductCart from "@/components/ProductCart";
 import useCartStore from "@/lib/useCartStore";
 import Link from "next/link";
+import {Divider} from "@nextui-org/react";
 
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
   const {cart, setCart} = useCartStore();
+  let [totalPrice, setTotalPrice] = useState();
 
   async function fetchData() {
     try {
@@ -33,6 +35,10 @@ export default function Page() {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    const total = cart.reduce((sum, item) => sum + item.payload.product.price, 0);
+    setTotalPrice(total);
+  }, [cart]);
 
   return (
     <>
@@ -46,9 +52,12 @@ export default function Page() {
                 <div
                   className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                   {
-                    cart.map((value, index) => {
+                    cart.map((value) => {
                       return (
-                        <ProductCart key={value.id} product={value}/>
+                        <>
+                          <ProductCart key={value.id} product={value.payload.product}/>
+                          <Divider className="my-4"/>
+                        </>
                       )
                     })
                   }
@@ -64,30 +73,21 @@ export default function Page() {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Original price</dt>
-                      <dd className="text-base font-medium text-gray-900 dark:text-white">$7,592.00</dd>
-                    </dl>
-
-                    <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Savings</dt>
-                      <dd className="text-base font-medium text-green-600">-$299.00</dd>
-                    </dl>
-
-                    <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Store Pickup</dt>
-                      <dd className="text-base font-medium text-gray-900 dark:text-white">$99</dd>
+                      <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Original Price</dt>
+                      <dd className="text-base font-medium text-gray-900 dark:text-white">Rp. {totalPrice}</dd>
                     </dl>
 
                     <dl className="flex items-center justify-between gap-4">
                       <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Tax</dt>
-                      <dd className="text-base font-medium text-gray-900 dark:text-white">$799</dd>
+                      <dd className="text-base font-medium text-gray-900 dark:text-white">Rp. {totalPrice * 0.11}</dd>
                     </dl>
                   </div>
 
                   <dl
                     className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
                     <dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-                    <dd className="text-base font-bold text-gray-900 dark:text-white">$8,191.00</dd>
+                    <dd
+                      className="text-base font-bold text-gray-900 dark:text-white">Rp. {totalPrice + (totalPrice * 0.11)}</dd>
                   </dl>
                 </div>
                 <Link href={process.env.NEXT_PUBLIC_BASE_URL + "/checkout"} passHref>
@@ -210,7 +210,8 @@ export default function Page() {
                 </button>
               </div>
             </div>
-            <div className="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <div
+              className="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
               <a href="#" className="overflow-hidden rounded">
                 <img className="mx-auto h-44 w-44 dark:hidden"
                      src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-light.svg"
