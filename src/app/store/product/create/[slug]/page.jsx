@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import useAuthStore from "@/lib/authStore";
+import {redirect} from "next/navigation";
 
 export default function Page({params}) {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -101,13 +102,11 @@ export default function Page({params}) {
         },
         body: data,
       });
-
-      const result = await response.json();
-      console.log('Sukses:', result);
-      if (result.success) {
-        redirect('/products');
+      if (response.status == 200) {
+        redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/api/store/index/${params.slug}`)
       }
-    } catch (error) {
+    } catch
+      (error) {
       console.error('Error:', error);
     }
   };
