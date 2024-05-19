@@ -13,13 +13,14 @@ import {
   ModalHeader,
   useDisclosure
 } from "@nextui-org/react";
+import useCartStore from "@/lib/useCartStore";
 
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  const {selectedProducts, setSelectedProducts} = useCartStore();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [loading, setLoading] = useState(true);
 
@@ -28,6 +29,7 @@ export default function Page() {
   }, [selectedProducts]);
 
   const calculateTotalPrice = () => {
+    console.log(selectedProducts)
     const newTotalPrice = selectedProducts.reduce(
       (sum, product) => sum + product.price * product.quantity,
       0
@@ -35,12 +37,6 @@ export default function Page() {
     setTotalPrice(newTotalPrice);
   };
 
-  const handleQuantityChange = (productId, newQuantity) => {
-    const updatedProducts = selectedProducts.map((product) =>
-      product.id === productId ? {...product, quantity: newQuantity} : product
-    );
-    setSelectedProducts(updatedProducts);
-  };
 
   async function fetchData() {
     try {
@@ -62,9 +58,15 @@ export default function Page() {
     }
   }
 
+  const handleQuantityChange = (productId, newQuantity) => {
+    const updatedProducts = selectedProducts.map(product =>
+      product.id === productId ? {...product, quantity: newQuantity} : product
+    );
+    setSelectedProducts(updatedProducts);
+  };
 
   const handleCheckboxChange = (selectedProduct) => {
-    const {id: productId, store_id: selectedStoreId} = selectedProduct;
+    const {store_id: selectedStoreId} = selectedProduct;
 
     // Cek apakah ada produk yang dipilih dari toko yang berbeda
     const isDifferentStoreSelected = selectedProducts.some((value) => value.store_id !== selectedStoreId);
@@ -76,11 +78,13 @@ export default function Page() {
       onOpen(); // Buka modal
       return; // Hentikan eksekusi selanjutnya
     }
+    console.log(selectedProducts)
     if (selectedProducts.some((value) => value.id === selectedProduct.id)) {
       // Jika produk sudah ada, hapus dari selectedProducts
       setSelectedProducts(selectedProducts.filter((value) => value.id !== selectedProduct.id));
     } else {
       // Jika produk belum ada, tambahkan ke selectedProducts
+      selectedProduct['quantity'] = 1;
       setSelectedProducts([...selectedProducts, selectedProduct]);
     }
     console.log(selectedProducts)
@@ -122,7 +126,7 @@ export default function Page() {
                           return (
                             <div className="mt-4" key={index}>
                               <ProductCart product={product} selectedProducts={selectedProducts}
-                                           handleCheckboxChange={handleCheckboxChange} storeId={value.store.id}
+                                           handleCheckboxChange={handleCheckboxChange}
                                            handleQuantityChange={handleQuantityChange}/>
                               <Divider className="bg-white"/>
                             </div>

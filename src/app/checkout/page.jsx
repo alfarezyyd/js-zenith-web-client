@@ -61,8 +61,20 @@ export default function Page() {
   const checkout = async () => {
     const orderPayload = {
       "address_id": selectedAddress.id,
-      "expedition_id": selectedExpedition
+      "expedition_id": selectedExpedition,
+      "store_id": selectedProducts[0].store_id,
+      order_payload: [],
     }
+
+    selectedProducts.forEach(product => {
+      order_payload.push({
+        product_id: product.id,
+        quantity: product.quantity,
+      });
+    });
+
+    console.log(orderPayload)
+    return
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/checkout`, {
       method: "POST",
       cache: "no-store",
@@ -191,15 +203,15 @@ export default function Page() {
                                 <img className="h-auto w-full max-h-full dark:hidden"
                                      src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"/>
                                 <img className="hidden h-auto w-full max-h-full dark:block"
-                                     src={process.env.NEXT_PUBLIC_BACKEND_URL + `/storage/stores/${product.resources[0].image_path}`}/>
+                                     src={process.env.NEXT_PUBLIC_BACKEND_URL + `/storage/stores/${value.resources[0].image_path}`}/>
                               </div>
-                              <p className="hover:underline">{product.name}</p>
+                              <p className="hover:underline">{value.name}</p>
                             </div>
                           </td>
                           <td
-                            className="p-4 text-base font-normal text-gray-900 dark:text-white">{value.payload.quantity}</td>
+                            className="p-4 text-base font-normal text-gray-900 dark:text-white">x{value.quantity}</td>
                           <td
-                            className="p-4 text-right text-base font-bold text-gray-900 dark:text-white">Rp. {value.payload.product.price}</td>
+                            className="p-4 text-right text-base font-bold text-gray-900 dark:text-white">Rp. {value.price}</td>
                         </tr>
                       )
                     })

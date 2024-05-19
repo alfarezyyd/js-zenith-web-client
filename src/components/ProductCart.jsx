@@ -1,8 +1,8 @@
 'use client'
 import React, {useEffect, useState} from 'react';
 
-export default function ProductCart({product, selectedProducts, handleCheckboxChange, storeId, handleQuantityChange}) {
-  const [quantity, setQuantity] = useState(product.quantity || 1);
+export default function ProductCart({product, selectedProducts, handleCheckboxChange, handleQuantityChange}) {
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     handleQuantityChange(product.id, quantity);
