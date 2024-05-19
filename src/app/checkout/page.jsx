@@ -18,12 +18,14 @@ export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
   const {cart, initializeCartFromStorage} = useCartStore();
   const [addresses, setAddresses] = React.useState([]);
+  const [expeditions, setExpeditions] = React.useState([]);
   let [totalPrice, setTotalPrice] = useState(0)
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [loading, setLoading] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState();
+  const [selectedExpedition, setSelectedExpedition] = useState(1);
 
-  const fetchAddressUser = async () => {
+  const fetchInitializeData = async () => {
     try {
       let responseAddresses = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/addresses`, {
         method: "GET",
@@ -37,6 +39,18 @@ export default function Page() {
       let dataAddresses = await responseAddresses.json();
       setAddresses(dataAddresses.data);
       setSelectedAddress(dataAddresses.data)
+
+      let responseExpedition = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/expeditions`, {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          Referer: '127.0.0.1:8000',
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+      });
+      let dataExpeditions = await responseExpedition.json();
+      setExpeditions(dataExpeditions.data)
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -44,6 +58,10 @@ export default function Page() {
   };
 
   const checkout = async () => {
+    const orderPayload = {
+      "address_id": selectedAddress.id,
+      "expedition_id": selectedExpedition
+    }
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/checkout`, {
       method: "POST",
       cache: "no-store",
@@ -77,7 +95,7 @@ export default function Page() {
   };
 
   useEffect(() => {
-    fetchAddressUser();
+    fetchInitializeData();
     initializeCartFromStorage();
   }, []);
 
@@ -89,6 +107,10 @@ export default function Page() {
   const handlePickAddress = (address) => {
     setSelectedAddress(address);
     onClose(); // Menutup modal setelah alamat dipilih
+  };
+
+  const handleExpeditionChange = (event) => {
+    setSelectedExpedition(event.target.value);
   };
 
   return (
@@ -108,8 +130,10 @@ export default function Page() {
                       {selectedAddress[0].label}
                     </dt>
                     <dd className="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
-                      {selectedAddress[0].street}, RT. {selectedAddress[0].neighbourhood_number}, RW. {selectedAddress[0].hamlet_number},
-                      Desa {selectedAddress[0].village}, Kelurahan {selectedAddress[0].urban_village}, Kecamatan {selectedAddress[0].sub_district}, Kode
+                      {selectedAddress[0].street}, RT. {selectedAddress[0].neighbourhood_number},
+                      RW. {selectedAddress[0].hamlet_number},
+                      Desa {selectedAddress[0].village}, Kelurahan {selectedAddress[0].urban_village},
+                      Kecamatan {selectedAddress[0].sub_district}, Kode
                       POS {selectedAddress[0].postal_code}
                     </dd>
                   </>
@@ -120,6 +144,28 @@ export default function Page() {
                   <Button onPress={onOpen} className="mt-2 hover:bg-cyan-500 text-white" color="default"> Edit</Button>
                 </dd>
               </dl>
+            </div>
+            <div className="mt-6 space-y-4 border-b border-gray-200 py-4 dark:border-gray-700 sm:mt-4">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Pick Courier</h4>
+              <div class="flex flex-row gap-6">
+                {expeditions !== null ? expeditions.map((value, index) => {
+                  return (
+                    <div key={value.id}
+                         class="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 basis-1/3">
+                      <input id={`bordered-radio-${index}`} type="radio" value={value.name}
+                             name={`bordered-radio-${value.id}`}
+                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                             onChange={handleExpeditionChange}/>
+                      <label htmlFor={`bordered-radio-${index}`}
+                             className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        {value.name}
+                      </label>
+                    </div>
+                  )
+                }) : (
+                  <dt className="text-base font-medium text-gray-900 dark:text-white">Courier</dt>
+                )}
+              </div>
             </div>
 
             <div className="mt-6 sm:mt-8">
