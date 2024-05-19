@@ -1,9 +1,8 @@
 'use client'
-import {Button, Image, Skeleton} from "@nextui-org/react";
+import {Button, Image} from "@nextui-org/react";
 import Link from "next/link";
 import useAuthStore from "@/lib/authStore";
 import {useEffect, useState} from "react";
-import {SkeletonTheme} from "react-loading-skeleton";
 
 export default function Page({params}) {
   const accessToken = useAuthStore((state) => state.accessToken);
