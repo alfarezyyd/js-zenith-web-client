@@ -16,7 +16,6 @@ import {
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
-  const {cart, initializeCartFromStorage} = useCartStore();
   const [addresses, setAddresses] = React.useState([]);
   const [expeditions, setExpeditions] = React.useState([]);
   let [totalPrice, setTotalPrice] = useState(0)
@@ -24,6 +23,8 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState();
   const [selectedExpedition, setSelectedExpedition] = useState(1);
+  const {selectedProducts} = useCartStore();
+
 
   const fetchInitializeData = async () => {
     try {
@@ -96,7 +97,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchInitializeData();
-    initializeCartFromStorage();
+    console.log(selectedProducts)
   }, []);
 
   if (loading) {
@@ -147,11 +148,11 @@ export default function Page() {
             </div>
             <div className="mt-6 space-y-4 border-b border-gray-200 py-4 dark:border-gray-700 sm:mt-4">
               <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Pick Courier</h4>
-              <div class="flex flex-row gap-6">
+              <div className="flex flex-row gap-6">
                 {expeditions !== null ? expeditions.map((value, index) => {
                   return (
-                    <div key={value.id}
-                         class="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 basis-1/3">
+                    <div key={index}
+                         className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 basis-1/3">
                       <input id={`bordered-radio-${index}`} type="radio" value={value.name}
                              name={`bordered-radio-${value.id}`}
                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -180,7 +181,8 @@ export default function Page() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {
-                    cart.map((value, index) => {
+                    selectedProducts.map((value, index) => {
+                      console.log(value)
                       return (
                         <tr key={index}>
                           <td className="whitespace-nowrap py-4 md:w-[384px]">
@@ -189,9 +191,9 @@ export default function Page() {
                                 <img className="h-auto w-full max-h-full dark:hidden"
                                      src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"/>
                                 <img className="hidden h-auto w-full max-h-full dark:block"
-                                     src={process.env.NEXT_PUBLIC_BACKEND_URL + `/storage/stores/${value.payload.product.resources[0].image_path}`}/>
+                                     src={process.env.NEXT_PUBLIC_BACKEND_URL + `/storage/stores/${product.resources[0].image_path}`}/>
                               </div>
-                              <p className="hover:underline">{value.payload.product.name}</p>
+                              <p className="hover:underline">{product.name}</p>
                             </div>
                           </td>
                           <td

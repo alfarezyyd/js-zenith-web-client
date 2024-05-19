@@ -1,17 +1,46 @@
 "use client"
-import React, {useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import useAuthStore from "@/lib/authStore";
 import ProductCart from "@/components/ProductCart";
 import useCartStore from "@/lib/useCartStore";
 import Link from "next/link";
-import {Divider} from "@nextui-org/react";
+import {
+  Button,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure
+} from "@nextui-org/react";
 
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
-  const {cart, setCart} = useCartStore();
-  let [totalPrice, setTotalPrice] = useState();
+  const [cart, setCart] = useState();
+  let [totalPrice, setTotalPrice] = useState(0);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [loading, setLoading] = useState(true); // Tambahkan state untuk pemuatan
+
+
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [selectedProducts]);
+
+
+  const calculateTotalPrice = () => {
+    const newTotalPrice = selectedProducts.reduce((sum, product) => sum + product.price * product.quantity, 0);
+    setTotalPrice(newTotalPrice);
+  };
+
+  const handleQuantityChange = (productId, newQuantity) => {
+    const updatedProducts = selectedProducts.map(product =>
+      product.id === productId ? {...product, quantity: newQuantity} : product
+    );
+    setSelectedProducts(updatedProducts);
+  };
 
   async function fetchData() {
     try {
@@ -26,9 +55,12 @@ export default function Page() {
       });
       let dataCart = await responseCart.json();
       setCart(dataCart.data)
-      console.log(dataCart)
+      setLoading(false); // Set pemuatan menjadi false setelah data berhasil diambil
+
     } catch (error) {
       console.error(error)
+      setLoading(false); // Set pemuatan menjadi false setelah data berhasil diambil
+
     }
   }
 
@@ -37,13 +69,19 @@ export default function Page() {
     fetchData()
   }, [])
 
-  const handleCheckboxChange = (storeId, productId, quantity) => {
+  if (loading) {
+    return (
+      <></>
+    )
+  }
+
+  const handleCheckboxChange = (storeId, productId, price, quantity) => {
     // Memeriksa apakah store id sudah ada di array selectedProducts
     const isStoreSelected = selectedProducts.length === 0 || selectedProducts[0].storeId === storeId;
 
     // Memeriksa apakah produk yang dipilih memiliki ID toko yang sama dengan toko pertama yang dipilih
     if (!isStoreSelected) {
-      alert("Anda hanya dapat memilih produk dari satu toko.");
+      onOpen()
       return;
     }
 
@@ -52,7 +90,7 @@ export default function Page() {
 
     // Jika belum dipilih, tambahkan produk ke array selectedProducts
     if (!isSelected) {
-      setSelectedProducts([...selectedProducts, {storeId, productId, quantity}]);
+      setSelectedProducts([...selectedProducts, {storeId, productId, price, quantity}]);
     } else {
       // Jika sudah dipilih, hapus produk dari array selectedProducts
       setSelectedProducts(selectedProducts.filter((product) => product.productId !== productId));
@@ -61,10 +99,6 @@ export default function Page() {
   };
 
 
-  // useEffect(() => {
-  //   const total = cart.reduce((sum, item) => sum + item.payload.product.price, 0);
-  //   setTotalPrice(total);
-  // }, [cart]);
 
   return (
     <>
@@ -93,7 +127,8 @@ export default function Page() {
                           return (
                             <div className="mt-4" key={index}>
                               <ProductCart product={product} selectedProducts={selectedProducts}
-                                           handleCheckboxChange={handleCheckboxChange} storeId={value.store.id}/>
+                                           handleCheckboxChange={handleCheckboxChange} storeId={value.store.id}
+                                           handleQuantityChange={handleQuantityChange}/>
                               <Divider className="bg-white"/>
                             </div>
                           )
@@ -303,6 +338,25 @@ export default function Page() {
           </div>
         </div>
       </section>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="bg-gray-900 text-white">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Failed!</ModalHeader>
+              <ModalBody>
+                <p>
+                  Hanya dapat memilih produk dari satu toko!
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }
