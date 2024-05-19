@@ -22,8 +22,8 @@ export default function ProductCart({product, selectedProducts, handleCheckboxCh
     <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 md:mb-8 sm:mb-4">
       <input
         type="checkbox"
-        checked={selectedProducts.some((value) => value.productId === product.id)}
-        onChange={() => handleCheckboxChange(storeId, product.id, product.price, quantity)}
+        checked={selectedProducts.some((value) => value.id === product.id)}
+        onChange={() => handleCheckboxChange(product)}
         className="mx-4 my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
       />
 

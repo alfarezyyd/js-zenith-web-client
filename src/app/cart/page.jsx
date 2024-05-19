@@ -1,8 +1,7 @@
 "use client"
-import React, {createContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import useAuthStore from "@/lib/authStore";
 import ProductCart from "@/components/ProductCart";
-import useCartStore from "@/lib/useCartStore";
 import Link from "next/link";
 import {
   Button,
@@ -18,25 +17,26 @@ import {
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
-  const [cart, setCart] = useState();
-  let [totalPrice, setTotalPrice] = useState(0);
+  const [cart, setCart] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const [loading, setLoading] = useState(true); // Tambahkan state untuk pemuatan
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     calculateTotalPrice();
   }, [selectedProducts]);
 
-
   const calculateTotalPrice = () => {
-    const newTotalPrice = selectedProducts.reduce((sum, product) => sum + product.price * product.quantity, 0);
+    const newTotalPrice = selectedProducts.reduce(
+      (sum, product) => sum + product.price * product.quantity,
+      0
+    );
     setTotalPrice(newTotalPrice);
   };
 
   const handleQuantityChange = (productId, newQuantity) => {
-    const updatedProducts = selectedProducts.map(product =>
+    const updatedProducts = selectedProducts.map((product) =>
       product.id === productId ? {...product, quantity: newQuantity} : product
     );
     setSelectedProducts(updatedProducts);
@@ -48,56 +48,51 @@ export default function Page() {
         method: "GET",
         cache: "no-store",
         headers: {
-          Referer: '127.0.0.1:8000',
-          Accept: 'application/json',
-          Authorization: `Bearer ${accessToken}`
+          Referer: "127.0.0.1:8000",
+          Accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
-      let dataCart = await responseCart.json();
-      setCart(dataCart.data)
-      setLoading(false); // Set pemuatan menjadi false setelah data berhasil diambil
-
+      const dataCart = await responseCart.json();
+      setCart(dataCart.data);
+      setLoading(false);
     } catch (error) {
-      console.error(error)
-      setLoading(false); // Set pemuatan menjadi false setelah data berhasil diambil
-
+      console.error(error);
+      setLoading(false);
     }
   }
 
 
-  useEffect(() => {
-    fetchData()
-  }, [])
+  const handleCheckboxChange = (selectedProduct) => {
+    const {id: productId, store_id: selectedStoreId} = selectedProduct;
 
-  if (loading) {
-    return (
-      <></>
-    )
-  }
+    // Cek apakah ada produk yang dipilih dari toko yang berbeda
+    const isDifferentStoreSelected = selectedProducts.some((value) => value.store_id !== selectedStoreId);
 
-  const handleCheckboxChange = (storeId, productId, price, quantity) => {
-    // Memeriksa apakah store id sudah ada di array selectedProducts
-    const isStoreSelected = selectedProducts.length === 0 || selectedProducts[0].storeId === storeId;
-
-    // Memeriksa apakah produk yang dipilih memiliki ID toko yang sama dengan toko pertama yang dipilih
-    if (!isStoreSelected) {
-      onOpen()
-      return;
+    // Jika ada produk yang dipilih dari toko yang berbeda, tampilkan pesan kesalahan dan batalkan pemilihan produk
+    if (isDifferentStoreSelected) {
+      // Tampilkan pesan kesalahan menggunakan modal atau alert
+      // Contoh menggunakan modal:
+      onOpen(); // Buka modal
+      return; // Hentikan eksekusi selanjutnya
     }
-
-    // Memeriksa apakah produk sudah dipilih sebelumnya
-    const isSelected = selectedProducts.find((product) => product.productId === productId);
-
-    // Jika belum dipilih, tambahkan produk ke array selectedProducts
-    if (!isSelected) {
-      setSelectedProducts([...selectedProducts, {storeId, productId, price, quantity}]);
+    if (selectedProducts.some((value) => value.id === selectedProduct.id)) {
+      // Jika produk sudah ada, hapus dari selectedProducts
+      setSelectedProducts(selectedProducts.filter((value) => value.id !== selectedProduct.id));
     } else {
-      // Jika sudah dipilih, hapus produk dari array selectedProducts
-      setSelectedProducts(selectedProducts.filter((product) => product.productId !== productId));
+      // Jika produk belum ada, tambahkan ke selectedProducts
+      setSelectedProducts([...selectedProducts, selectedProduct]);
     }
     console.log(selectedProducts)
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return null;
+  }
 
 
   return (
