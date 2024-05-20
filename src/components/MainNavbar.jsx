@@ -69,7 +69,7 @@ export default function App() {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href={`cart`}>
+            <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/cart`}>
               Cart
             </Link>
           </NavbarItem>

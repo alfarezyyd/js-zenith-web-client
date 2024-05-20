@@ -62,6 +62,7 @@ export default function Page() {
       });
       let dataExpeditions = await responseExpedition.json();
       setExpeditions(dataExpeditions.data)
+      console.log(dataExpeditions)
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -69,6 +70,7 @@ export default function Page() {
   };
 
   const checkout = async () => {
+    console.log(selectedExpedition)
     const orderPayload = {
       address_id: selectedAddress['id'],
       expedition_id: selectedExpedition,
@@ -98,10 +100,9 @@ export default function Page() {
     });
 
     const requestData = await response.json();
-    console.log(requestData)
+    console.log(requestData.data.token)
     window.snap.pay(requestData.data.token, {
       onSuccess: function (result) {
-        alert("payment success!");
         console.log(result);
       },
       onPending: function (result) {
@@ -178,7 +179,7 @@ export default function Page() {
                   return (
                     <div key={index}
                          className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 basis-1/3">
-                      <input id={`bordered-radio-${index}`} type="radio" value={value.name}
+                      <input id={`bordered-radio-${index}`} type="radio" value={value.id}
                              name={`bordered-radio-${value.id}`}
                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                              onChange={handleExpeditionChange}/>
