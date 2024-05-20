@@ -104,12 +104,12 @@ export default function App() {
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" className="h-14 gap-2">
+                <DropdownItem key="user-information" className="h-14 gap-2">
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold">zoey@example.com</p>
                 </DropdownItem>
                 <DropdownItem key="profile" as={Link} href={"/profile"}>Profile</DropdownItem>
-                <DropdownItem key="analytics">Cart</DropdownItem>
+                <DropdownItem key="addresses" as={Link} href={"/addresses"}>Addresses</DropdownItem>
                 <DropdownItem key="system">Wishlist</DropdownItem>
                 <DropdownItem key="logout" color="danger">
                   Log Out

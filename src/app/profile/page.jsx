@@ -2,8 +2,10 @@
 import React, {useState} from 'react';
 import {ZenithLogo} from "@/assets/ZenithLogo";
 import {DatePicker} from "@nextui-org/date-picker";
+import useAuthStore from "@/lib/authStore";
 
 export default function Page() {
+  const accessToken = useAuthStore((state) => state.accessToken);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -47,9 +49,12 @@ export default function Page() {
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user-profiles`, {
-        method: 'POST',
+        method: "POST",
+        cache: "no-store",
         headers: {
-          Accept: 'application/json',
+          Referer: "127.0.0.1:8000",
+          Accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: formDataToSend,
       });
