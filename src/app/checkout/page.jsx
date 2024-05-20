@@ -25,6 +25,18 @@ export default function Page() {
   const {selectedProducts} = useCartStore();
 
 
+  const calculateTotalPrice = () => {
+    const total = selectedProducts.reduce((sum, product) => {
+      return sum + product.price * product.quantity;
+    }, 0);
+    setTotalPrice(total);
+  };
+
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [selectedProducts]);
+
+
   const fetchInitializeData = async () => {
     try {
       let responseAddresses = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/addresses`, {
@@ -38,8 +50,7 @@ export default function Page() {
       });
       let dataAddresses = await responseAddresses.json();
       setAddresses(dataAddresses.data);
-      setSelectedAddress(dataAddresses.data)
-
+      setSelectedAddress(dataAddresses.data[0])
       let responseExpedition = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/expeditions`, {
         method: "GET",
         cache: "no-store",
@@ -58,6 +69,22 @@ export default function Page() {
   };
 
   const checkout = async () => {
+    const orderPayload = {
+      address_id: selectedAddress['id'],
+      expedition_id: selectedExpedition,
+      store_id: selectedProducts[0].store_id,
+      order_payload: [],
+      gross_amount: totalPrice
+    }
+
+    selectedProducts.forEach(product => {
+      orderPayload.order_payload.push({
+        id: product.id,
+        quantity: product.quantity,
+        price: product.price
+      });
+    });
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/checkout`, {
       method: "POST",
       cache: "no-store",
@@ -67,7 +94,7 @@ export default function Page() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`
       },
-      body: JSON.stringify({gross_amount: 2000}),
+      body: JSON.stringify(orderPayload),
     });
 
     const requestData = await response.json();
@@ -126,14 +153,14 @@ export default function Page() {
                 {selectedAddress !== null ? (
                   <>
                     <dt className="text-base font-medium text-gray-900 dark:text-white">
-                      {selectedAddress[0].label}
+                      {selectedAddress.label}
                     </dt>
                     <dd className="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
-                      {selectedAddress[0].street}, RT. {selectedAddress[0].neighbourhood_number},
-                      RW. {selectedAddress[0].hamlet_number},
-                      Desa {selectedAddress[0].village}, Kelurahan {selectedAddress[0].urban_village},
-                      Kecamatan {selectedAddress[0].sub_district}, Kode
-                      POS {selectedAddress[0].postal_code}
+                      {selectedAddress.street}, RT. {selectedAddress.neighbourhood_number},
+                      RW. {selectedAddress.hamlet_number},
+                      Desa {selectedAddress.village}, Kelurahan {selectedAddress.urban_village},
+                      Kecamatan {selectedAddress.sub_district}, Kode
+                      POS {selectedAddress.postal_code}
                     </dd>
                   </>
                 ) : (
@@ -214,11 +241,6 @@ export default function Page() {
                     <dl className="flex items-center justify-between gap-4">
                       <dt className="text-gray-500 dark:text-gray-400">Original Price</dt>
                       <dd className="text-base font-medium text-gray-900 dark:text-white">Rp. {totalPrice}</dd>
-                    </dl>
-
-                    <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-gray-500 dark:text-gray-400">Store Pickup</dt>
-                      <dd className="text-base font-medium text-gray-900 dark:text-white">$99</dd>
                     </dl>
 
                     <dl className="flex items-center justify-between gap-4">
