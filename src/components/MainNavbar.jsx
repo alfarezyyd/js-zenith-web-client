@@ -69,7 +69,7 @@ export default function App() {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="/cart">
+            <Link href={`cart`}>
               Cart
             </Link>
           </NavbarItem>
