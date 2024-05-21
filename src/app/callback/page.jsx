@@ -13,7 +13,7 @@ export default function Page() {
 
     if (token) {
       setAccessToken(token); // Simpan token ke store menggunakan zustand
-      redirect('http://localhost:3000')
+      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/checkpoint`)
     }
 
     // Redirect atau navigasi ke halaman lain
