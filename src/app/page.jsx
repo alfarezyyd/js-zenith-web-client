@@ -78,13 +78,13 @@ export default function Home() {
           <Carousel width={850} autoPlay interval={3000} showStatus={false} infiniteLoop
                     showThumbs={false}>
             <div>
-              <Image src={"banners/slide-banner.jpg"} className="bg-cover"/>
+              <Image src={"banners/discount-banner.png"} className="bg-cover"/>
             </div>
             <div>
               <Image src={"banners/slide-banner.jpg"} className="bg-cover"/>
             </div>
             <div className="">
-              <Image src={"banners/slide-banner.jpg"} className="bg-cover"/>
+              <Image src={"banners/hero-page.png"} className="bg-cover"/>
             </div>
           </Carousel>
         </div>

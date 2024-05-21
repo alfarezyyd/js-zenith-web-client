@@ -12,6 +12,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import {redirect} from "next/navigation";
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
