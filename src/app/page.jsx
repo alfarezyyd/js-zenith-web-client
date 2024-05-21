@@ -71,9 +71,6 @@ export default function Home() {
   return (
     <>
       <div className="flex mt-4">
-        <div className="w-1/3">
-          <ListboxLink/>
-        </div>
         <div className="w-max mx-auto rounded-xl overflow-hidden h-max">
           <Carousel width={850} autoPlay interval={3000} showStatus={false} infiniteLoop
                     showThumbs={false}>

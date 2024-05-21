@@ -9,6 +9,7 @@ const ProductPage = ({params}) => {
   const accessToken = useAuthStore((state) => state.accessToken);
   const [product, setProduct] = useState([]);
   const {isOpen, onOpen, onClose} = useDisclosure();
+  const [loading, setLoading] = useState(true);
 
   const handleOpen = () => {
     onOpen();
@@ -26,10 +27,12 @@ const ProductPage = ({params}) => {
       })
       const dataProduct = await responseProduct.json()
       setProduct(dataProduct.data)
+      setLoading(false);
     } catch (error) {
       console.error(error)
     }
   }
+
 
   async function addIntoCart() {
     try {
@@ -51,6 +54,9 @@ const ProductPage = ({params}) => {
   useEffect(() => {
     fetchData()
   }, [])
+  if (loading) {
+    return null;
+  }
 
   return (
     <>
@@ -59,10 +65,10 @@ const ProductPage = ({params}) => {
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
             <div className="shrink-0 max-w-md lg:max-w-lg mx-auto">
               <img className="w-full dark:hidden"
-                   src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"
-                   alt=""/>
+                   src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/stores/${product.resources[0].image_path}`}
+                   alt="imac image"/>
               <img className="w-full hidden dark:block"
-                   src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt=""/>
+                   src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/stores/${product.resources[0].image_path}`}/>
             </div>
 
             <div className="mt-6 sm:mt-8 lg:mt-0">

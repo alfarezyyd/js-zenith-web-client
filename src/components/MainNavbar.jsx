@@ -119,13 +119,16 @@ export default function App() {
                 </DropdownMenu>
               </Dropdown>
             ) : (
-              ""
+              <Button variant="flat" className="bg-white text-sky-700" as={Link}
+                      href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`}>
+                Sign in
+              </Button>
             )}
           </NavbarContent>
         ) : (
           <NavbarContent as="div" className="items-center" justify="end">
             <Button variant="flat" className="bg-white text-sky-700" as={Link}
-                    href={`${process.env.NEXT_PUBLIC_BASE_URL}/login`}>
+                    href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`}>
               Sign in
             </Button>
           </NavbarContent>
