@@ -22,6 +22,7 @@ export default function Page() {
   const [provinces, setProvinces] = useState([])
   const accessToken = useAuthStore((state) => state.accessToken);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [createStatus, setCreateStatus] = useState(0);
 
   const fetchData = (async () => {
     let responseExpeditionProvince = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/expedition-provinces`, {
@@ -39,6 +40,13 @@ export default function Page() {
   useEffect(() => {
     fetchData()
   }, []);
+
+  useEffect(() => {
+    if (createStatus === 201) {
+      redirect(process.env.NEXT_PUBLIC_URL + "/addresses")
+    }
+  }, [createStatus]);
+
   useEffect(() => {
     console.log(provinces)
     if (selectedProvince) {
@@ -100,19 +108,21 @@ export default function Page() {
     Object.keys(formData).forEach(key => {
       formDataToSend.append(key, formData[key]);
     });
-    // Handle form submission, e.g., send the data to an API
-    let responseAddresses = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/addresses`, {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        Referer: '127.0.0.1:8000',
-        Accept: 'application/json',
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: formDataToSend
-    });
-    if (responseAddresses.status === 200) {
-      redirect(`${process.env.NEXT_PUBLIC_URL}/api/addresses`)
+    try {
+      // Handle form submission, e.g., send the data to an API
+      let responseAddresses = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/addresses`, {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          Referer: '127.0.0.1:8000',
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: formDataToSend
+      });
+      setCreateStatus(responseAddresses.status)
+    } catch (err) {
+      console.error(err)
     }
   };
 

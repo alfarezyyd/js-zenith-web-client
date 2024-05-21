@@ -220,7 +220,7 @@ export default function Page() {
               <ModalHeader className="flex flex-col gap-1">Success</ModalHeader>
               <ModalBody>
                 <p>
-                  {product.name} succesfully inserted to cart
+                  Profile updated succesfully
                 </p>
               </ModalBody>
               <ModalFooter>

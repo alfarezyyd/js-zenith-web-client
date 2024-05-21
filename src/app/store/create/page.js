@@ -5,6 +5,7 @@ import {redirect} from "next/navigation";
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
+  const [createState, setCreateState] = useState();
   const [storeSlug, setStoreSlug] = useState();
   const [formValues, setFormValues] = useState({
     name: '',
@@ -72,7 +73,7 @@ export default function Page() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
@@ -80,7 +81,7 @@ export default function Page() {
       formData.append(key, formValues[key]);
     }
 
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stores`, {
+    let responseStore = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stores`, {
       method: 'POST',
       cache: 'no-store',
       headers: {
@@ -89,15 +90,15 @@ export default function Page() {
         Authorization: `Bearer ${accessToken}`
       },
       body: formData,
-    })
-      .then(async (response) => {
-        let responseCreate = await response.json();
-        return redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/stores/index/${responseCreate.data.slug}`)
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    });
+    setCreateState(responseStore.status)
   };
+
+  useEffect(() => {
+    if (createState === 201){
+      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/store/create`)
+    }
+  }, []);
 
   return (
     <section className="bg-white dark:bg-gray-900">

@@ -62,7 +62,6 @@ export default function Page() {
       });
       let dataExpeditions = await responseExpedition.json();
       setExpeditions(dataExpeditions.data)
-      console.log(dataExpeditions)
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -70,7 +69,6 @@ export default function Page() {
   };
 
   const checkout = async () => {
-    console.log(selectedExpedition)
     const orderPayload = {
       address_id: selectedAddress['id'],
       expedition_id: selectedExpedition,
@@ -100,6 +98,7 @@ export default function Page() {
     });
 
     const requestData = await response.json();
+    console.log(requestData)
     console.log(requestData.data.token)
     window.snap.pay(requestData.data.token, {
       onSuccess: function (result) {
