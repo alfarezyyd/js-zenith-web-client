@@ -48,7 +48,6 @@ export default function Page() {
   }, [createStatus]);
 
   useEffect(() => {
-    console.log(provinces)
     if (selectedProvince) {
       const province = provinces.find((p) => p.id === parseInt(selectedProvince));
       setAvailableCities(province ? province.expedition_cities : []);

@@ -11,17 +11,19 @@ import {
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
-  Avatar, Button
+  Avatar, Button, Divider
 } from "@nextui-org/react";
 import {ZenithLogo} from "@/assets/ZenithLogo";
 import {SearchIcon} from "@/assets/SearchIcon";
 import Link from "next/link";
 import useAuthStore from "@/lib/authStore";
+import useUserStore from "@/lib/useUserStore";
 
 export default function App() {
   const [isBlurred, setIsBlurred] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const accessToken = useAuthStore((state) => state.accessToken);
+  const userProfile = useUserStore((state) => state.userProfile);
 
   useEffect(() => {
     setIsMounted(true);
@@ -87,34 +89,38 @@ export default function App() {
               startContent={<SearchIcon size={18}/>}
               type="search"
             />
-            <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                <Avatar
-                  isBordered
-                  as="button"
-                  className="transition-transform"
-                  color="secondary"
-                  name="Jason Hughes"
-                  size="sm"
-                  src="/avatar/default.png"
-                />
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="user-information" className="h-14 gap-2">
-                  <p className="font-semibold">Signed in as</p>
-                  <p className="font-semibold">zoey@example.com</p>
-                </DropdownItem>
-                <DropdownItem key="profile" as={Link} href={"/profile"}>Profile</DropdownItem>
-                <DropdownItem key="addresses" as={Link} href={"/addresses"}>Addresses</DropdownItem>
-                <DropdownItem key="system">Wishlist</DropdownItem>
-                <DropdownItem key="my-order"  as={Link} href={"/order/index"}>
-                  Orders
-                </DropdownItem>
-                <DropdownItem key="logout" color="danger">
-                  Log Out
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            {userProfile !== null ? (
+              <Dropdown placement="bottom-end">
+                <DropdownTrigger>
+                  <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                    color="secondary"
+                    name="Jason Hughes"
+                    size="sm"
+                    src="/avatar/default.png"
+                  />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                  <DropdownItem key="user-information" className="h-14 gap-2">
+                    <p className="font-semibold">Signed in as</p>
+                    <p className="font-semibold">{userProfile}</p>
+                  </DropdownItem>
+                  <DropdownItem key="profile" as={Link} href={"/profile"}>Profile</DropdownItem>
+                  <DropdownItem key="addresses" as={Link} href={"/addresses"}>Addresses</DropdownItem>
+                  <DropdownItem key="system">Wishlist</DropdownItem>
+                  <DropdownItem key="my-order" as={Link} href={"/order/index"}>
+                    Orders
+                  </DropdownItem>
+                  <DropdownItem key="logout" color="danger">
+                    Log Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            ) : (
+              ""
+            )}
           </NavbarContent>
         ) : (
           <NavbarContent as="div" className="items-center" justify="end">
