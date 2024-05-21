@@ -112,7 +112,7 @@ export default function Page() {
       body: formDataToSend
     });
     if (responseAddresses.status === 200) {
-
+      redirect(`${process.env.NEXT_PUBLIC_URL}/api/addresses`)
     }
   };
 
@@ -378,7 +378,7 @@ export default function Page() {
               <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
               <ModalBody>
                 <p>
-                 Address created succesfully
+                  Address created succesfully
                 </p>
               </ModalBody>
               <ModalFooter>

@@ -20,7 +20,7 @@ export default function Page() {
   let [totalPrice, setTotalPrice] = useState(0)
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [loading, setLoading] = useState(true);
-  const [selectedAddress, setSelectedAddress] = useState();
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [selectedExpedition, setSelectedExpedition] = useState(1);
   const {selectedProducts} = useCartStore();
 

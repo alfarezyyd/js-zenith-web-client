@@ -29,9 +29,13 @@ export default function Page() {
         },
       })
       const dataStore = await responseStore.json()
-      return dataStore.data.slug;
+      setStoreSlug(dataStore.data.slug)
     } catch (error) {
       console.error(error)
+    } finally {
+      if (storeSlug) {
+        redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/store/index/${dataStore.data.slug}`);
+      }
     }
   }
 
@@ -99,7 +103,7 @@ export default function Page() {
     <section className="bg-white dark:bg-gray-900">
       <div className="py-12 px-4 mx-auto max-w-2xl lg:py-16">
         <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Become Seller in Zenith!</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} method="POST">
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
             <div className="w-full">
               <div className="relative">
