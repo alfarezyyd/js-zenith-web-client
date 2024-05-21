@@ -1,3 +1,4 @@
+
 import {ZenithLogo} from "@/assets/ZenithLogo";
 
 export default function Footer() {

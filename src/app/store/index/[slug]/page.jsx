@@ -289,7 +289,6 @@ export default function Page({params}) {
                 <tbody>
                 {
                   orders.map((value, index) => {
-                    console.log(value)
                     return (
                       <tr key={index}
                           className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">

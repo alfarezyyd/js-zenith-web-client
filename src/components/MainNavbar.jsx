@@ -58,11 +58,7 @@ export default function App() {
           </Link>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-3">
-          <NavbarItem>
-            <Link color="foreground" href="/">
-              Home
-            </Link>
-          </NavbarItem>
+
           <NavbarItem isActive>
             <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/store/create`} aria-current="page" color="secondary">
               Store
@@ -111,6 +107,9 @@ export default function App() {
                 <DropdownItem key="profile" as={Link} href={"/profile"}>Profile</DropdownItem>
                 <DropdownItem key="addresses" as={Link} href={"/addresses"}>Addresses</DropdownItem>
                 <DropdownItem key="system">Wishlist</DropdownItem>
+                <DropdownItem key="my-order"  as={Link} href={"/order/index"}>
+                  Orders
+                </DropdownItem>
                 <DropdownItem key="logout" color="danger">
                   Log Out
                 </DropdownItem>

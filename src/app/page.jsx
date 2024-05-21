@@ -8,7 +8,6 @@ import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import {useEffect, useState} from "react";
 import {redirect} from "next/navigation";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import useAuthStore from "@/lib/authStore";
 
 export default function Home() {
