@@ -105,7 +105,7 @@ export default function App() {
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem key="user-information" className="h-14 gap-2">
                     <p className="font-semibold">Signed in as</p>
-                    <p className="font-semibold">{userProfile}</p>
+                    <p className="font-semibold">{userProfile.first_name + ' ' + userProfile.last_name}</p>
                   </DropdownItem>
                   <DropdownItem key="profile" as={Link} href={"/profile"}>Profile</DropdownItem>
                   <DropdownItem key="addresses" as={Link} href={"/addresses"}>Addresses</DropdownItem>
