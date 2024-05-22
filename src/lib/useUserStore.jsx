@@ -9,7 +9,6 @@ const useUserStore = create(
     }),
     {
       name: 'profile-storage', // Nama storage key (opsional)
-      getStorage: () => sessionStorage, // (optional) by default, 'localStorage' is used
     }
   )
 );

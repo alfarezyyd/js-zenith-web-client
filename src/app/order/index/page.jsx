@@ -72,7 +72,7 @@ export default function Page() {
                     </div>
                   </CardBody>
                   <CardFooter>
-                    {value.status === "FINISHED" ? (
+                    {value.status !== "FINISHED" ? (
                       <Button color="primary" onClick={() => confirmOrder(value.id)}>
                         Confirm
                       </Button>

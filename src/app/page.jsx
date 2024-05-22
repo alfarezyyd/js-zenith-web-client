@@ -1,18 +1,15 @@
 'use client'
 
-import ListboxLink from "@/components/ListboxLink";
 import {Carousel} from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import {Divider, Image} from "@nextui-org/react";
 import ProductCard from "@/components/ProductCard";
-import CategoryCard from "@/components/CategoryCard";
 import {useEffect, useState} from "react";
 import {redirect} from "next/navigation";
 import useAuthStore from "@/lib/authStore";
 
 export default function Home() {
   const [product, setProduct] = useState([])
-  const [category, setCategory] = useState([])
 
   const fetchData = async () => {
     try {
@@ -31,8 +28,6 @@ export default function Home() {
       }
       const dataProduct = await responseProduct.json();
       setProduct(dataProduct.data);
-      const dataCategory = await responseCategory.json();
-      setCategory(dataCategory.data);
     } catch (err) {
       console.log(err);
     }

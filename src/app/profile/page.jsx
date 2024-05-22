@@ -1,14 +1,16 @@
 "use client"
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ZenithLogo} from "@/assets/ZenithLogo";
 import {DatePicker} from "@nextui-org/date-picker";
 import useAuthStore from "@/lib/authStore";
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure} from "@nextui-org/react";
 import {redirect} from "next/navigation";
+import useUserStore from "@/lib/useUserStore";
 
 export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
   const {isOpen, onOpen, onClose} = useDisclosure();
+  const userProfile = useUserStore((state) => state.userProfile);
 
   const [formData, setFormData] = useState({
     first_name: '',
@@ -19,6 +21,18 @@ export default function Page() {
     phone: '',
     file: null,
   });
+
+  useEffect(() => {
+    if (userProfile) {
+      setFormData({
+        first_name: userProfile.first_name || '',
+        last_name: userProfile.last_name || '',
+        email: userProfile.email || '',
+        phone: userProfile.phone || '',
+        file: null,
+      });
+    }
+  }, [userProfile]);
 
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -42,32 +56,34 @@ export default function Page() {
     }));
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach(key => {
-      formDataToSend.append(key, formData[key]);
+      if (formData[key] !== null) {
+        formDataToSend.append(key, formData[key]);
+      }
     });
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user-profiles`, {
-        method: "POST",
+        method: userProfile ? "PUT" : "POST",
         cache: "no-store",
         headers: {
           Referer: "127.0.0.1:8000",
           Accept: "application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: formDataToSend,
+        body: JSON.stringify(formDataToSend),
       });
 
       if (response.ok) {
-        onOpen()
+        onOpen();
       } else {
         const errorData = await response.json();
-        console.error('Failed to create profile:', errorData);
+        console.error('Failed to submit profile:', errorData);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -79,9 +95,9 @@ export default function Page() {
       <section className="bg-white dark:bg-gray-900 h-full rounded-2xl">
         <a href="#"
            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white justify-center">
-        <span className="mt-8">
-          <ZenithLogo/>
-        </span>
+          <span className="mt-8">
+            <ZenithLogo/>
+          </span>
         </a>
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16 bg-gray-800 rounded-2xl">
           <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Fill your profile!</h2>
@@ -152,7 +168,6 @@ export default function Page() {
                 </select>
               </div>
               <div className="w-full">
-
                 <DatePicker
                   name="birth_date"
                   color="default"
@@ -161,7 +176,6 @@ export default function Page() {
                   value={formData.birth_date}
                   onChange={(date) => handleDateChange(date)}
                 />
-
               </div>
               <div className="sm:col-span-2">
                 <div className="relative">
@@ -180,9 +194,7 @@ export default function Page() {
                   </label>
                 </div>
               </div>
-
               <div className="sm:col-span-2">
-
                 <div className="flex items-center justify-center w-full">
                   <label htmlFor="dropzone-file"
                          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -200,7 +212,6 @@ export default function Page() {
                            name="file"/>
                   </label>
                 </div>
-
               </div>
             </div>
             <button
@@ -220,11 +231,11 @@ export default function Page() {
               <ModalHeader className="flex flex-col gap-1">Success</ModalHeader>
               <ModalBody>
                 <p>
-                  Profile updated succesfully
+                  Profile {userProfile ? 'updated' : 'created'} successfully
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button color="success" onPress={() => redirect(`${process.env.NEXT_PUBLIC_URL}`)}>
+                <Button color="success" onPress={() => redirect(`${process.env.NEXT_PUBLIC_BASE_URL}`)}>
                   Close
                 </Button>
               </ModalFooter>
