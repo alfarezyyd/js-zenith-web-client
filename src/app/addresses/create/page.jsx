@@ -43,7 +43,7 @@ export default function Page() {
 
   useEffect(() => {
     if (createStatus === 201) {
-      redirect(process.env.NEXT_PUBLIC_URL + "/addresses")
+      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/addresses`)
     }
   }, [createStatus]);
 

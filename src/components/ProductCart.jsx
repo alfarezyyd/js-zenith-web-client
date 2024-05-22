@@ -85,7 +85,7 @@ export default function ProductCart({product, selectedProducts, handleCheckboxCh
           </button>
         </div>
         <div className="text-end md:order-4 md:w-32">
-          <p className="text-base font-bold text-gray-900 dark:text-white">${product.price * quantity}</p>
+          <p className="text-base font-bold text-gray-900 dark:text-white">Rp. {product.price * quantity}</p>
         </div>
       </div>
       <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">

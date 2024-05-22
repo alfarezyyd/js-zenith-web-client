@@ -91,14 +91,10 @@ export default function Page() {
       },
       body: formData,
     });
-    setCreateState(responseStore.status)
-  };
-
-  useEffect(() => {
-    if (createState === 201){
-      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/store/create`)
+    if (responseStore.status === 201){
+      window.location.reload()
     }
-  }, []);
+  };
 
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -282,7 +278,7 @@ export default function Page() {
             type="submit"
             className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
           >
-            Add product
+            Add store
           </button>
         </form>
       </div>

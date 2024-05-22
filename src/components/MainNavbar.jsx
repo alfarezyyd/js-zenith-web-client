@@ -19,6 +19,10 @@ import Link from "next/link";
 import useAuthStore from "@/lib/authStore";
 import useUserStore from "@/lib/useUserStore";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
+import {redirect} from "next/navigation";
+import {
+  hasInterceptionRouteInCurrentTree
+} from "next/dist/client/components/router-reducer/reducers/has-interception-route-in-current-tree";
 
 export default function App() {
   const [isBlurred, setIsBlurred] = useState(false);
@@ -38,6 +42,9 @@ export default function App() {
       },
     });
     setResponseStatus(responseProfile.status)
+    if (responseProfile !== 200) {
+      redirect(`${proccess.env.NEXT_PUBLIC_BACKEND_URL}/profiles`);
+    }
   })
 
   const handlingLogout = (async () => {
@@ -50,7 +57,7 @@ export default function App() {
         Authorization: `Bearer ${accessToken}`
       },
     });
-    if (responseLogout.status === 200){
+    if (responseLogout.status !== 200) {
       window.location.reload()
     }
   })
@@ -92,7 +99,7 @@ export default function App() {
             <ZenithLogo/>
           </Link>
         </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-3">
+        <NavbarContent className="hidden sm:flex gap-3 ml-64">
           <NavbarItem isActive>
             <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/store/create`} aria-current="page" color="secondary">
               Store
@@ -111,19 +118,7 @@ export default function App() {
         </NavbarContent>
       </NavbarContent>
 
-      <NavbarContent as="div" className="items-center" justify="end">
-        <Input
-          classNames={{
-            base: "max-w-full sm:max-w-[25rem] h-10",
-            mainWrapper: "h-full",
-            input: "text-small",
-            inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="Type to search..."
-          size="sm"
-          startContent={<SearchIcon size={18}/>}
-          type="search"
-        />
+      <NavbarContent as="div" className="items-center mr-28" justify="end">
         {responseStatus !== 401 ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>

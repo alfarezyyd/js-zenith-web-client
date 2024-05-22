@@ -153,18 +153,7 @@ export default function Page({params}) {
             All Product
           </h2>
           <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-            <div
-              className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
-              <div className="flex items-center flex-1 space-x-4">
-                <h5>
-                  <span className="text-gray-500">All Products:</span>
-                  <span className="dark:text-white">123456</span>
-                </h5>
-                <h5>
-                  <span className="text-gray-500">Total sales:</span>
-                  <span className="dark:text-white">$88.4k</span>
-                </h5>
-              </div>
+            <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
               <div
                 className="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
                 <Button type="button" as={Link} href={`/store/product/create/${store.slug}`}
@@ -177,28 +166,12 @@ export default function Page({params}) {
                   </svg>
                   Add new product
                 </Button>
-                <button type="button"
-                        className="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                  <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                       strokeWidth="2" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
-                  </svg>
-                  Export
-                </button>
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="p-4">
-                    <div className="flex items-center">
-                      <input id="checkbox-all" type="checkbox"
-                             className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                      <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
-                    </div>
-                  </th>
                   <th scope="col" className="px-4 py-3">Product</th>
                   <th scope="col" className="px-4 py-3">Category</th>
                   <th scope="col" className="px-4 py-3">Price</th>
@@ -216,13 +189,7 @@ export default function Page({params}) {
                     return (
                       <tr key={index}
                           className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <td className="w-4 px-4 py-3">
-                          <div className="flex items-center">
-                            <input id="checkbox-table-search-1" type="checkbox"
-                                   className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                            <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-                          </div>
-                        </td>
+
 
                         <th scope="row"
                             className="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">

@@ -68,15 +68,14 @@ export default function Page() {
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user-profiles`, {
-        method: userProfile ? "PUT" : "POST",
+        method: "POST",
         cache: "no-store",
         headers: {
           Referer: "127.0.0.1:8000",
           Accept: "application/json",
-          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(formDataToSend),
+        body: formDataToSend,
       });
 
       if (response.ok) {

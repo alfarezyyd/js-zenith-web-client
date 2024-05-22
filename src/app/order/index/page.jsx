@@ -8,8 +8,19 @@ export default function Page() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true);
 
-  const confirmOrder = (async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/complete/`)
+  const confirmOrder = (async (orderId) => {
+    let responseOrder = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/complete/${orderId}`, {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        Referer: "127.0.0.1:8000",
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if (responseOrder.status === 200) {
+      window.location.reload()
+    }
   })
   const fetchDataOrder = (async () => {
     let responseOrders = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/user`, {

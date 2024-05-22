@@ -174,7 +174,7 @@ export default function Page() {
                 </Link>
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> or </span>
-                  <a href="#" title=""
+                  <a href={`${process.env.NEXT_PUBLIC_BASE_URL}}`} title=""
                      className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500">
                     Continue Shopping
                     <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
