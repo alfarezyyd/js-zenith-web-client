@@ -31,18 +31,7 @@ export default function Page() {
           All Categories
         </h2>
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-          <div
-            className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
-            <div className="flex items-center flex-1 space-x-4">
-              <h5>
-                <span className="text-gray-500">All Products:</span>
-                <span className="dark:text-white">123456</span>
-              </h5>
-              <h5>
-                <span className="text-gray-500">Total sales:</span>
-                <span className="dark:text-white">$88.4k</span>
-              </h5>
-            </div>
+          <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div
               className="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
               <Button type="button" as={Link} href={`/categories/create`}

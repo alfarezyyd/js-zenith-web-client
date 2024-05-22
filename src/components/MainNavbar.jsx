@@ -40,6 +40,21 @@ export default function App() {
     setResponseStatus(responseProfile.status)
   })
 
+  const handlingLogout = (async () => {
+    let responseLogout = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/logout`, {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        Referer: '127.0.0.1:8000',
+        Accept: 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      },
+    });
+    if (responseLogout.status === 200){
+      window.location.reload()
+    }
+  })
+
   useEffect(() => {
     checkUserState()
   }, []);
@@ -129,11 +144,10 @@ export default function App() {
               </DropdownItem>
               <DropdownItem key="profile" as={Link} href={"/profile"}>Profile</DropdownItem>
               <DropdownItem key="addresses" as={Link} href={"/addresses"}>Addresses</DropdownItem>
-              <DropdownItem key="system">Wishlist</DropdownItem>
               <DropdownItem key="my-order" as={Link} href={"/order/index"}>
                 Orders
               </DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onClick={handlingLogout}>
                 Log Out
               </DropdownItem>
             </DropdownMenu>
