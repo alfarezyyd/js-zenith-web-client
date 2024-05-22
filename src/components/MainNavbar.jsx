@@ -6,7 +6,6 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Input,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
@@ -14,15 +13,9 @@ import {
   Avatar, Button, Divider
 } from "@nextui-org/react";
 import {ZenithLogo} from "@/assets/ZenithLogo";
-import {SearchIcon} from "@/assets/SearchIcon";
 import Link from "next/link";
 import useAuthStore from "@/lib/authStore";
 import useUserStore from "@/lib/useUserStore";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
-import {redirect} from "next/navigation";
-import {
-  hasInterceptionRouteInCurrentTree
-} from "next/dist/client/components/router-reducer/reducers/has-interception-route-in-current-tree";
 
 export default function App() {
   const [isBlurred, setIsBlurred] = useState(false);
@@ -31,21 +24,6 @@ export default function App() {
   const userProfile = useUserStore((state) => state.userProfile);
   const [responseStatus, setResponseStatus] = useState(0);
 
-  const checkUserState = (async () => {
-    let responseProfile = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user-profiles/info`, {
-      method: "GET",
-      cache: "no-store",
-      headers: {
-        Referer: "127.0.0.1:8000",
-        Accept: "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    setResponseStatus(responseProfile.status)
-    if (responseProfile !== 200) {
-      redirect(`${proccess.env.NEXT_PUBLIC_BACKEND_URL}/profiles`);
-    }
-  })
 
   const handlingLogout = (async () => {
     let responseLogout = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/logout`, {
@@ -62,9 +40,6 @@ export default function App() {
     }
   })
 
-  useEffect(() => {
-    checkUserState()
-  }, []);
 
   useEffect(() => {
     setIsMounted(true);
@@ -100,25 +75,33 @@ export default function App() {
           </Link>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-3 ml-64">
-          <NavbarItem isActive>
-            <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/store/create`} aria-current="page" color="secondary">
-              Store
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/cart`}>
-              Cart
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/categories`}>
-              Category
-            </Link>
-          </NavbarItem>
+          {responseStatus !== 401 ? (
+            <>
+              <NavbarItem isActive>
+                <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/store/create`} aria-current="page" color="secondary">
+                  Store
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/cart`}>
+                  Cart
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/categories`}>
+                  Category
+                </Link>
+              </NavbarItem>
+            </>
+          ) : (
+            <NavbarItem>
+
+            </NavbarItem>
+          )}
         </NavbarContent>
       </NavbarContent>
 
-      <NavbarContent as="div" className="items-center mr-28" justify="end">
+      <NavbarContent as="div" className="items-center ml-28" justify="end">
         {responseStatus !== 401 ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
@@ -154,7 +137,6 @@ export default function App() {
             </Button>
           </NavbarContent>
         )}
-
       </NavbarContent>
     </Navbar>
   );

@@ -11,7 +11,6 @@ export default function Page() {
   const accessToken = useAuthStore((state) => state.accessToken);
   const {isOpen, onOpen, onClose} = useDisclosure();
   const userProfile = useUserStore((state) => state.userProfile);
-
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -225,7 +224,7 @@ export default function Page() {
       </section>
       <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
         <ModalContent className="bg-gray-900 text-white">
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">Success</ModalHeader>
               <ModalBody>

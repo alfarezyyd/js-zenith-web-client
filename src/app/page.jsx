@@ -7,9 +7,39 @@ import ProductCard from "@/components/ProductCard";
 import {useEffect, useState} from "react";
 import {redirect} from "next/navigation";
 import useAuthStore from "@/lib/authStore";
+import useUserStore from "@/lib/useUserStore";
 
 export default function Home() {
   const [product, setProduct] = useState([])
+  const [responseStatus, setResponseStatus] = useState([])
+  const setUserProfile = useUserStore((state) => state.setUserProfile)
+
+  const checkUserState = (async () => {
+    let responseProfile = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user-profiles/info`, {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        Referer: "127.0.0.1:8000",
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    setResponseStatus(responseProfile.status)
+    if (responseProfile.status !== 401) {
+      let dataProfile = await responseProfile.json();
+      setUserProfile(dataProfile.data)
+    }
+  })
+
+  useEffect(() => {
+    if (responseStatus === 500 || responseStatus === 401) {
+      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/profile`)
+    }
+  }, [responseStatus]);
+
+  useEffect(() => {
+    checkUserState()
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -24,7 +54,7 @@ export default function Home() {
       });
 
       if (responseProduct.status === 401) {
-        return redirect(process.env.NEXT_PUBLIC_BACKEND_URL + '/auth/google');
+        return redirect(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`);
       }
       const dataProduct = await responseProduct.json();
       setProduct(dataProduct.data);
