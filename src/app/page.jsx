@@ -26,15 +26,6 @@ export default function Home() {
         },
       });
 
-      const responseCategory = await fetch("http://127.0.0.1:8000/api/categories", {
-        method: "GET",
-        cache: "no-store",
-        headers: {
-          Referer: '127.0.0.1:8000',
-          Accept: 'application/json',
-          Authorization: `Bearer ${accessToken}`
-        },
-      });
       if (responseProduct.status === 401) {
         return redirect(process.env.NEXT_PUBLIC_BACKEND_URL + '/auth/google');
       }
@@ -84,18 +75,6 @@ export default function Home() {
               <Image src={"banners/hero-page.png"} className="bg-cover"/>
             </div>
           </Carousel>
-        </div>
-      </div>
-      <div className="xl:mt-14">
-        <h1 className="text-left text-2xl font-semibold subpixel-antialiased">Browse By Category</h1>
-        <div className="flex flex-row gap-x-8 mt-5">
-          {
-            category.map((item, index) => {
-              return (
-                <CategoryCard categoryName={item.name} key={index} categorySlug={item.slug}/>
-              )
-            })
-          }
         </div>
       </div>
       <Divider className="my-8"/>

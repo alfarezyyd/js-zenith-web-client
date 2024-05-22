@@ -138,8 +138,7 @@ export default function Page({params}) {
             All Product
           </h2>
           <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-            <div
-              className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
+            <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
               <div className="flex items-center flex-1 space-x-4">
                 <h5>
                   <span className="text-gray-500">All Products:</span>
@@ -150,8 +149,7 @@ export default function Page({params}) {
                   <span className="dark:text-white">$88.4k</span>
                 </h5>
               </div>
-              <div
-                className="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
+              <div className="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
                 <Button type="button" as={Link} href={`/store/product/create/${store.slug}`}
                         className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                   <svg className="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20"

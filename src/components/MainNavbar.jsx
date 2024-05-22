@@ -44,7 +44,6 @@ export default function App() {
   if (!isMounted) {
     return null; // Render nothing or a loading indicator
   }
-
   return (
     <Navbar
       isBordered
@@ -69,6 +68,11 @@ export default function App() {
           <NavbarItem>
             <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/cart`}>
               Cart
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/categories`}>
+              Category
             </Link>
           </NavbarItem>
         </NavbarContent>

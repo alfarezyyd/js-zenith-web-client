@@ -125,8 +125,7 @@ export default function Page() {
     }
   };
 
-  return (
-    <>
+  return (<>
       <section className="bg-white dark:bg-gray-900 h-full rounded-2xl">
         <a href="#"
            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white justify-center">
