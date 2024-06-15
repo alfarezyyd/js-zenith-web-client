@@ -16,6 +16,7 @@ import {ZenithLogo} from "@/assets/ZenithLogo";
 import Link from "next/link";
 import useAuthStore from "@/lib/authStore";
 import useUserStore from "@/lib/useUserStore";
+import {redirect} from "next/navigation";
 
 export default function App() {
   const [isBlurred, setIsBlurred] = useState(false);
@@ -24,6 +25,22 @@ export default function App() {
   const userProfile = useUserStore((state) => state.userProfile);
   const [responseStatus, setResponseStatus] = useState(0);
 
+  const checkUserState = (async () => {
+    let responseProfile = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user-profiles/info`, {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        Referer: "127.0.0.1:8000",
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    setResponseStatus(responseProfile.status)
+  })
+  useEffect(() => {
+    if (responseStatus === 500){
+    }
+  }, []);
 
   const handlingLogout = (async () => {
     let responseLogout = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/logout`, {
@@ -35,11 +52,14 @@ export default function App() {
         Authorization: `Bearer ${accessToken}`
       },
     });
-    if (responseLogout.status !== 200) {
-      window.location.reload()
+    if (responseLogout.status === 200) {
+      redirect(`${process.env.NEXT__PUBLIC_BASE_URL}`);
     }
   })
 
+  useEffect(() => {
+    checkUserState()
+  }, []);
 
   useEffect(() => {
     setIsMounted(true);

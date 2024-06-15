@@ -54,7 +54,7 @@ export default function Page() {
           <dl className="sm:flex items-center justify-between gap-4">
             <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">Name</dt>
             <dd
-              className="font-medium text-gray-900 dark:text-white sm:text-end">{order.first_name + ' ' + order.user.last_name}</dd>
+              className="font-medium text-gray-900 dark:text-white sm:text-end">{order.user.first_name + ' ' + order.user.last_name}</dd>
           </dl>
           <dl className="sm:flex items-center justify-between gap-4">
             <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">Address</dt>

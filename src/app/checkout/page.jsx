@@ -100,7 +100,6 @@ export default function Page() {
 
     const requestData = await response.json();
     console.log(requestData)
-    console.log(requestData.data.token)
     window.snap.pay(requestData.data.token, {
       onSuccess: function (result) {
         console.log(result);

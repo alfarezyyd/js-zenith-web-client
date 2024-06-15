@@ -25,14 +25,15 @@ export default function Home() {
       },
     });
     setResponseStatus(responseProfile.status)
-    if (responseProfile.status !== 401) {
+    if (responseProfile.status === 200) {
       let dataProfile = await responseProfile.json();
       setUserProfile(dataProfile.data)
     }
   })
 
   useEffect(() => {
-    if (responseStatus === 500 || responseStatus === 401) {
+
+    if (responseStatus === 500) {
       redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/profile`)
     }
   }, [responseStatus]);
